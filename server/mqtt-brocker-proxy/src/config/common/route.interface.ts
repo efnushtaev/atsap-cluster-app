@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
 import { IMiddleware } from './middleware.interface';
-import { RequestMethod } from '../const';
+import { RequestMethod } from '../../const';
 
 export interface IControllerRoute {
 	path: string;

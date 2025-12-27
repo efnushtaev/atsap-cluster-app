@@ -6,10 +6,10 @@ import { App } from './app';
 import { IConfigService } from './config/config.service.interface';
 import { ILogger } from './logger/logger.interface';
 import { LoggerService } from './logger/loggerService';
-import { ObjectController } from './controllers/object/object.controller';
+import { ObjectController } from './controllers/object.controller';
 import { ExeptionFilter } from './errors/exeption.filter';
 import { ConfigService } from './config/config.service';
-import { IObjectController } from './controllers/object/object.controller.interface';
+import { IObjectController } from './controllers/object.controller.interface';
 import { RightechObjectService } from './services/rightech-object-service/rightechObject.service';
 import { IRightechObjectService } from './services/rightech-object-service/rightechObject.service.interface';
 

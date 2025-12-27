@@ -1,13 +1,13 @@
 import { Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 
-import { TYPES } from '../../types';
+import { TYPES } from '../types';
 import 'reflect-metadata';
 import { IObjectController } from './object.controller.interface';
-import { BaseController } from '../../common/baseController';
-import { ILogger } from '../../logger/logger.interface';
-import { IRightechObjectService } from '../../services/rightech-object-service/rightechObject.service.interface';
-import { ControllersRoutesURL, RequestMethod } from '../../const';
+import { ILogger } from '../logger/logger.interface';
+import { IRightechObjectService } from '../services/rightech-object-service/rightechObject.service.interface';
+import { ControllersRoutesURL, RequestMethod } from '../const';
+import { BaseController } from '../config/common/baseController';
 
 @injectable()
 export class ObjectController extends BaseController implements IObjectController {
