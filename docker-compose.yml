@@ -6,7 +6,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: my-app-backend
+    container_name: server
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -17,6 +17,7 @@ services:
       - DB_DATABASE=users_db
       - DB_USER=app_user
       - DB_PASSWORD=secure_password
+      - RIGHTECH_API_TOKEN=token
     depends_on:
       - mysql
     expose:
@@ -45,7 +46,8 @@ services:
   # Nginx reverse proxy
   nginx:
     build:
-      context: .
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: my-app-nginx
     restart: unless-stopped
     ports:
