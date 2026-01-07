@@ -9,7 +9,7 @@ import { IConfigService } from "../../config/config.service.interface";
 export class MySQLService implements MySQL {
   private pool;
 
-  constructor(@inject(TYPES.ConfigService) private config: IConfigService) {
+  constructor(@inject(TYPES.ConfigService) config: IConfigService) {
     this.pool = mysql.createPool({
       port: Number(config.get("MYSQL_PORT")) || 3306,
       host: config.get("MYSQL_HOST") || "mysql",

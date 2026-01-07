@@ -9,7 +9,6 @@ import "reflect-metadata";
 import { IExeptionFilter } from "./errors/exeption.filter.interface";
 import { ObjectController } from "./controllers/object.controller";
 import { MySQL } from "./services/my-sql-service/mySql.interface";
-import { DemoController } from "./controllers/demo.controller";
 
 @injectable()
 export class App {
@@ -20,7 +19,6 @@ export class App {
   constructor(
     @inject(TYPES.Logger) private logger: ILogger,
     @inject(TYPES.ObjectController) private objectController: ObjectController,
-    @inject(TYPES.DemoController) private demoController: DemoController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
     @inject(TYPES.MySQL) private mySQL: MySQL,
   ) {

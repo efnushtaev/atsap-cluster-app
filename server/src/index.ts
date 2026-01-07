@@ -12,10 +12,6 @@ import { ConfigService } from "./config/config.service";
 import { IObjectController } from "./controllers/object.controller.interface";
 import { RightechObjectService } from "./services/rightech-object-service/rightechObject.service";
 import { IRightechObjectService } from "./services/rightech-object-service/rightechObject.interface";
-import { IDemoService } from "./services/demo/demo.interface";
-import { DemoService } from "./services/demo/demo.service";
-import { IDemoController } from "./controllers/demo.controller.interface";
-import { DemoController } from "./controllers/demo.controller";
 import { MySQL } from "./services/my-sql-service/mySql.interface";
 import { MySQLService } from "./services/my-sql-service/mySql.service";
 
@@ -25,10 +21,6 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
     .inSingletonScope();
   bind<IObjectController>(TYPES.ObjectController)
     .to(ObjectController)
-    .inSingletonScope();
-  bind<IDemoService>(TYPES.DemoService).to(DemoService).inSingletonScope();
-  bind<IDemoController>(TYPES.DemoController)
-    .to(DemoController)
     .inSingletonScope();
   bind<MySQL>(TYPES.MySQL).to(MySQLService).inSingletonScope();
   bind<ILogger>(TYPES.Logger).to(LoggerService).inSingletonScope();
