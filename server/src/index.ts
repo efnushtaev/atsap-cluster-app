@@ -6,21 +6,26 @@ import { App } from "./app";
 import { IConfigService } from "./config/config.service.interface";
 import { ILogger } from "./logger/logger.interface";
 import { LoggerService } from "./logger/loggerService";
-import { ObjectController } from "./controllers/object.controller";
+import { ObjectsController } from "./controllers/objects.controller";
 import { ExeptionFilter } from "./errors/exeption.filter";
 import { ConfigService } from "./config/config.service";
-import { IObjectController } from "./controllers/object.controller.interface";
-import { RightechObjectService } from "./services/rightech-object-service/rightechObject.service";
-import { IRightechObjectService } from "./services/rightech-object-service/rightechObject.interface";
-import { MySQL } from "./services/my-sql-service/mySql.interface";
-import { MySQLService } from "./services/my-sql-service/mySql.service";
+import { RightechProxyService } from "./services/rightechProxy.service";
+import { IRightechProxyService } from "./services/rightechProxy.interface";
+import { MySQL } from "./services/mySql.interface";
+import { MySQLService } from "./services/mySql.service";
+import { IUnitsController } from "./controllers/units.controller.interface";
+import { UnitsController } from "./controllers/units.controller";
+import { IObjectsController } from "./controllers/objects.controller.interface";
 
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-  bind<IRightechObjectService>(TYPES.RightechObjectService)
-    .to(RightechObjectService)
+  bind<IRightechProxyService>(TYPES.RightechProxyService)
+    .to(RightechProxyService)
     .inSingletonScope();
-  bind<IObjectController>(TYPES.ObjectController)
-    .to(ObjectController)
+  bind<IObjectsController>(TYPES.ObjectsController)
+    .to(ObjectsController)
+    .inSingletonScope();
+  bind<IUnitsController>(TYPES.UnitsController)
+    .to(UnitsController)
     .inSingletonScope();
   bind<MySQL>(TYPES.MySQL).to(MySQLService).inSingletonScope();
   bind<ILogger>(TYPES.Logger).to(LoggerService).inSingletonScope();

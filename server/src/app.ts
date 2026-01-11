@@ -7,8 +7,10 @@ import { ILogger } from "./logger/logger.interface";
 import { TYPES } from "./types";
 import "reflect-metadata";
 import { IExeptionFilter } from "./errors/exeption.filter.interface";
-import { ObjectController } from "./controllers/object.controller";
-import { MySQL } from "./services/my-sql-service/mySql.interface";
+import { ObjectsController } from "./controllers/objects.controller";
+import { MySQL } from "./services/mySql.interface";
+import { API_V1_URL_PREFIX, ControllersDomens } from "./const";
+import { UnitsController } from "./controllers/units.controller";
 
 @injectable()
 export class App {
@@ -18,7 +20,10 @@ export class App {
 
   constructor(
     @inject(TYPES.Logger) private logger: ILogger,
-    @inject(TYPES.ObjectController) private objectController: ObjectController,
+    @inject(TYPES.ObjectsController)
+    private objectsController: ObjectsController,
+    @inject(TYPES.UnitsController)
+    private unitsController: UnitsController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
     @inject(TYPES.MySQL) private mySQL: MySQL,
   ) {
@@ -31,7 +36,14 @@ export class App {
   }
 
   private useRoutes(): void {
-    this.app.use("/mqttBrockerProxy", this.objectController.router);
+    this.app.use(
+      `${API_V1_URL_PREFIX}${ControllersDomens.OBJECTS}`,
+      this.objectsController.router,
+    );
+    this.app.use(
+      `${API_V1_URL_PREFIX}${ControllersDomens.UNITS}`,
+      this.unitsController.router,
+    );
   }
 
   private useExeptionFilters(): void {

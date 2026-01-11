@@ -1,13 +1,21 @@
-export enum ControllersRoutesURL {
-  OBJECTS_ALL = "/api/v1/objects",
-  OBJECT_ID = "/api/v1/objects/:id",
-  COMMAND_BY_ID = "/api/v1/objects/:id/commands/:command",
-  DEMO_GET_TIMESTAMP = "/api/v1/getTimestamp",
-  DEMO_GET_COUNT = "/api/v1/getCount",
+export const API_V1_URL_PREFIX = "/api/v1";
+
+export enum ControllersDomens {
+  OBJECTS = "/objects",
+  UNITS = "/units",
 }
 
-const MQTT_BROCKER_HOST = "dev.rightech.io";
-export const MQTT_BROCKER_API_URL = `https://${MQTT_BROCKER_HOST}/api/v1/`;
+export enum UnitsControllersRoutesURL {
+  UNITS_LIST = "/list",
+}
+
+export enum ObjectsControllersRoutesURL {
+  OBJECTS_LIST = "/list",
+  OBJECTS_DETAILS = "/details/:id",
+  OBJECTS_HISTORY = "/history/:id",
+}
+
+export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1/";
 
 export enum RequestMethod {
   GET = "get",

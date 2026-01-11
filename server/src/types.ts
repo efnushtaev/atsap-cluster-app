@@ -3,11 +3,10 @@ export const TYPES = {
   ConfigService: Symbol.for("ConfigService"),
   ExeptionFilter: Symbol.for("ExeptionFilter"),
   Logger: Symbol.for("Logger"),
-  ObjectController: Symbol.for("ObjectController"),
-  RightechObjectService: Symbol.for("RightechObjectService"),
+  ObjectsController: Symbol.for("ObjectsController"),
+  UnitsController: Symbol.for("UnitsController"),
+  RightechProxyService: Symbol.for("RightechProxyService"),
   MySQL: Symbol.for("MySQL"),
-  DemoService: Symbol.for("DemoService"),
-  DemoController: Symbol.for("DemoController"),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
