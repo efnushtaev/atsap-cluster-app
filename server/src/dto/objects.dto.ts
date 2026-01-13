@@ -2,11 +2,11 @@ import { IsString } from "class-validator";
 
 import { ObjectsType, SensorObjectsType } from "./types";
 
-export class AtsapObjectsDto {
-  @IsString()
+export class ObjectsDto {
   /**
    * Айди объекта
    */
+  @IsString()
   id: string;
   /**
    * Тип объекта
@@ -16,6 +16,10 @@ export class AtsapObjectsDto {
    * Тип датчика
    */
   sensorType?: SensorObjectsType;
+  /**
+   * Топик объекта
+   */
+  topic: string;
   /**
    * Имя объекта
    */

@@ -5,6 +5,7 @@ export interface IRightechProxyService {
   getModelsList: () => Promise<{ data: TEMPORARY_ANY[] }>;
   getObjectById: (id: string) => Promise<{ state: TEMPORARY_ANY }>;
   getObjectsList: () => Promise<{ data: TEMPORARY_ANY[] }>;
+  getObjectsPackets: (id: string) => Promise<{ data: TEMPORARY_ANY[] }>;
   callCommandById: (
     id: string,
     command: string,

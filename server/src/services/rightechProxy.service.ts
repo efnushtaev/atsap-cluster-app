@@ -17,11 +17,14 @@ export class RightechProxyService implements IRightechProxyService {
   async getObjectById(id: string) {
     try {
       // @todo добавить типизацию для response
-      const response = await axios.get(`${MQTT_BROCKER_API_URL}objects/${id}`, {
-        headers: {
-          Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
+      const response = await axios.get(
+        `${MQTT_BROCKER_API_URL}/objects/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
+          },
         },
-      });
+      );
       this.logger.log("Succes fetching data:", JSON.stringify(response.data));
       return response.data;
     } catch (error) {
@@ -33,7 +36,7 @@ export class RightechProxyService implements IRightechProxyService {
   async getObjectsList() {
     try {
       // @todo добавить типизацию для response
-      const response = await axios.get(`${MQTT_BROCKER_API_URL}objects`, {
+      const response = await axios.get(`${MQTT_BROCKER_API_URL}/objects`, {
         headers: {
           Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
         },
@@ -49,7 +52,7 @@ export class RightechProxyService implements IRightechProxyService {
   async getModelById(id: string) {
     try {
       // @todo добавить типизацию для response
-      const response = await axios.get(`${MQTT_BROCKER_API_URL}models/${id}`, {
+      const response = await axios.get(`${MQTT_BROCKER_API_URL}/models/${id}`, {
         headers: {
           Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
         },
@@ -66,7 +69,7 @@ export class RightechProxyService implements IRightechProxyService {
     try {
       // @todo добавить типизацию для response
       const response = await axios.get(
-        `${MQTT_BROCKER_API_URL}models?with=data`,
+        `${MQTT_BROCKER_API_URL}/models?with=data`,
         {
           headers: {
             Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
@@ -81,11 +84,31 @@ export class RightechProxyService implements IRightechProxyService {
     }
   }
 
+  async getObjectsPackets(id: string) {
+    try {
+      // @todo добавить типизацию для response
+      const response = await axios.get(
+        `${MQTT_BROCKER_API_URL}/objects/${id}/packets?from=2025-05-01T00:00&to=2025-06-01T00:00`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
+          },
+        },
+      );
+      this.logger.log("Succes fetching data:", response.status);
+      return response.data;
+    } catch (error) {
+
+      this.logger.error("Error fetching data:", JSON.stringify(error));
+      return error as Error;
+    }
+  }
+
   async callCommandById(id: string, command: string) {
     try {
       // @todo добавить типизацию для response
       const response = await axios.post(
-        `${MQTT_BROCKER_API_URL}objects/${id}/commands/${command}`,
+        `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,
         {},
         {
           headers: {

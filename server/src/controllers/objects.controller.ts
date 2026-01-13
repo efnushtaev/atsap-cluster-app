@@ -34,11 +34,12 @@ export class ObjectsController
       },
       {
         path: ObjectsControllersRoutesURL.OBJECTS_HISTORY,
-        method: RequestMethod.GET,
+        method: RequestMethod.POST,
         func: this.getObjectsHistory,
       },
     ]);
   }
+
   async getObjectsList({ body }: Request, res: Response) {
     const { data: rightechModelData } =
       await this.rightechObjectService.getModelById(body.modelId);
@@ -72,9 +73,15 @@ export class ObjectsController
     return this.ok(res, { ...object });
   }
 
-  async getObjectsHistory({ params }: Request, res: Response) {
-    const object = await this.rightechObjectService.getObjectById(params.id);
+  async getObjectsHistory({ body }: Request, res: Response) {
+    const historyData = await this.rightechObjectService.getObjectsPackets(
+      body.objectId,
+    );
 
-    return this.ok(res, { ...object });
+    const object = new AtsapObject();
+
+    const history = object.getObjectHistory(historyData);
+
+    return this.ok(res, { history });
   }
 }

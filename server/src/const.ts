@@ -12,12 +12,14 @@ export enum UnitsControllersRoutesURL {
 export enum ObjectsControllersRoutesURL {
   OBJECTS_LIST = "/list",
   OBJECTS_DETAILS = "/details/:id",
-  OBJECTS_HISTORY = "/history/:id",
+  OBJECTS_HISTORY = "/history",
 }
 
-export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1/";
+export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1";
 
 export enum RequestMethod {
   GET = "get",
   POST = "post",
 }
+
+export const PERIOD_1H = 3600;
