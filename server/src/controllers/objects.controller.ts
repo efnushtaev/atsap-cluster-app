@@ -2,7 +2,11 @@ import { Response, Request } from "express";
 import { inject, injectable } from "inversify";
 
 import "reflect-metadata";
-import { IObjectsController } from "./objects.controller.interface";
+import {
+  GetObjectsListParamsReq,
+  GetObjectsListResponse,
+  IObjectsController,
+} from "./objects.controller.interface";
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
 import { TEMPORARY_ANY, TYPES } from "../types";
@@ -27,61 +31,50 @@ export class ObjectsController
         method: RequestMethod.POST,
         func: this.getObjectsList,
       },
-      {
-        path: ObjectsControllersRoutesURL.OBJECTS_DETAILS,
-        method: RequestMethod.GET,
-        func: this.getObjectsDetails,
-      },
-      {
-        path: ObjectsControllersRoutesURL.OBJECTS_HISTORY,
-        method: RequestMethod.POST,
-        func: this.getObjectsHistory,
-      },
     ]);
   }
 
-  async getObjectsList({ body }: Request, res: Response) {
+  async getObjectsList(
+    { body }: Request<GetObjectsListParamsReq>,
+    res: Response,
+  ) {
     const { data: rightechModelData } =
       await this.rightechObjectService.getModelById(body.modelId);
     const { state: rightechObjectState } =
       await this.rightechObjectService.getObjectById(body.objectId);
 
-    const object = new AtsapObject();
+    const atsapObject = new AtsapObject();
 
     const rightechModelParams = rightechModelData.children.find(
       (child: TEMPORARY_ANY) => child.id === "params",
     );
 
+    console.log("rightechModelParams: ", rightechModelParams);
+
     const objectsList = rightechModelParams.children.map(
       (rightechModelParam: TEMPORARY_ANY) => {
-        return object.getObjectFromRightech(
+        return atsapObject.getObjectFromRightech(
           rightechObjectState,
           rightechModelParam,
         );
       },
     );
 
-    return this.ok(res, { objectsList });
+    return this.ok<GetObjectsListResponse>(res, { objectsList });
   }
 
-  async getObjectsDetails({ params }: Request, res: Response) {
-    const object = await this.rightechObjectService.callCommandById(
-      params.id,
-      params.command,
-    );
+  // async getObjectsDetails(
+  //   req: Request<GetObjectsDetailsParamsReq>,
+  //   res: Response,
+  // ) {
+  //   const { data } = await this.rightechObjectService.getObjectById(
+  //     req.params.objectId,
+  //   );
 
-    return this.ok(res, { ...object });
-  }
+  //   const atsapObject = new AtsapObject();
 
-  async getObjectsHistory({ body }: Request, res: Response) {
-    const historyData = await this.rightechObjectService.getObjectsPackets(
-      body.objectId,
-    );
+  //   atsapObject.getObjectFromRightech(rightechObjectState, rightechModelParam);
 
-    const object = new AtsapObject();
-
-    const history = object.getObjectHistory(historyData);
-
-    return this.ok(res, { history });
-  }
+  //   return this.ok<GetObjectsDetailsRes>(res, { object: data });
+  // }
 }

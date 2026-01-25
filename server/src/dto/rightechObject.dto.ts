@@ -5,4 +5,5 @@ export class RightechObjectDto {
   model: string;
   id: string;
   name: string;
+  state: object;
 }

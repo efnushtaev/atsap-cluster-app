@@ -30,7 +30,7 @@ export abstract class BaseController {
     return this.send<T>(res, 200, message);
   }
 
-  protected bindRoutes(routes: IControllerRoute[]) {
+  protected bindRoutes<Req>(routes: IControllerRoute<Req>[]) {
     for (const route of routes) {
       this.logger.log(`[${route.method}] ${route.path}`);
       const middleware = route.middlewares?.map((m) => m.execute.bind(m));

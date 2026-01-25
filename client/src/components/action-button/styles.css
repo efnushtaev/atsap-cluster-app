@@ -1,0 +1,31 @@
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    box-sizing: border-box;
+}
+
+.action-button__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--actions-button-border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.action-button__icon-wrapper:hover {
+    border: 1px solid var(--actions-button-border-color--active);
+    transition: 0.15s;
+}
+
+.action-button__icon {
+    color: var(--icon-color);
+}
+

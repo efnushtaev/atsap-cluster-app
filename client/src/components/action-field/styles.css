@@ -1,0 +1,11 @@
+.action-field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 44px 20px 16px;
+  gap: 40px;
+
+  box-sizing: border-box;
+  margin: 0 auto;
+}

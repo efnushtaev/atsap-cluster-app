@@ -61,7 +61,10 @@ export class AtsapObject {
     rightechModelParam: TEMPORARY_ANY,
   ): ObjectsDto {
     const { id, name, description, reference } = rightechModelParam;
+    console.log("rightechObjectState: ", rightechObjectState);
+
     const value = rightechObjectState[id];
+
     return {
       id,
       name,

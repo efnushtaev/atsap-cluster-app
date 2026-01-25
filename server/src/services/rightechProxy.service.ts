@@ -98,7 +98,6 @@ export class RightechProxyService implements IRightechProxyService {
       this.logger.log("Succes fetching data:", response.status);
       return response.data;
     } catch (error) {
-
       this.logger.error("Error fetching data:", JSON.stringify(error));
       return error as Error;
     }

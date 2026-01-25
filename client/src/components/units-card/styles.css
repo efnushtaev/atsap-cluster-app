@@ -1,0 +1,67 @@
+.units-card {
+  height: 160px;
+  max-width: 500px;
+  min-width: 460px;
+  display: flex;
+  border: 1px solid var(--border-color-2);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #666666 0%, #595959 100%);
+  box-sizing: border-box;
+}
+
+.units-card__content {
+  padding: 0px 16px 0px 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  width: 340px;
+  box-sizing: border-box;
+}
+
+.units-card__title {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  color: var(--font-title-color-1);
+  > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.units-card__describe {
+  text-align: left;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: #ffffff;
+  align-self: stretch;
+  overflow: hidden;
+  height: 64px;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.units-card__picture {
+  flex-shrink: 1;
+  font-size: 64px;
+  color: var(--unit-picture-color);
+  background-color: var(--unit-picture-background);
+  min-width: 120px;
+  max-width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
