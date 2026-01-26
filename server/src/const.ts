@@ -20,6 +20,9 @@ export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1";
 export enum RequestMethod {
   GET = "get",
   POST = "post",
+  PUT = "put",
+  DELETE = "delete",
+  PATCH = "patch",
 }
 
 export const PERIOD_1H = 3600;

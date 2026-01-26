@@ -5,5 +5,5 @@ export class RightechObjectDto {
   model: string;
   id: string;
   name: string;
-  state: object;
+  state: Record<string, string | number | boolean | undefined>;
 }

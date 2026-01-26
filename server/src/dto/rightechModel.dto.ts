@@ -7,7 +7,7 @@ type LevelsValue = {
   };
 };
 
-type ModelChildren = {
+export type ModelChildren = {
   id: string;
   name: string;
   active: boolean;
@@ -20,6 +20,7 @@ type ModelChildren = {
   factor?: number;
   children?: ModelChildren[];
   linear?: boolean;
+  description?: string;
   levels?: {
     type: string;
     value: LevelsValue[];

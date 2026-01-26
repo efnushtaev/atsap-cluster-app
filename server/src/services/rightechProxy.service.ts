@@ -1,125 +1,101 @@
 import { inject, injectable } from "inversify";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 import { TYPES } from "../types";
 import { ILogger } from "../logger/logger.interface";
 import { IRightechProxyService } from "./rightechProxy.interface";
 import { IConfigService } from "../config/config.service.interface";
-import { MQTT_BROCKER_API_URL } from "../const";
+import { MQTT_BROCKER_API_URL, RequestMethod } from "../const";
+import { RightechObjectDto } from "../dto/rightechObject.dto";
+import { RightechModelDto } from "../dto/rightechModel.dto";
+import { TEMPORARY_ANY } from "../types";
 
 @injectable()
 export class RightechProxyService implements IRightechProxyService {
+  private readonly apiToken: string;
+  private readonly defaultHeaders: Record<string, string>;
+
   constructor(
     @inject(TYPES.Logger) private logger: Omit<ILogger, "logger">,
     @inject(TYPES.ConfigService) private config: IConfigService,
-  ) {}
-
-  async getObjectById(id: string) {
-    try {
-      // @todo добавить типизацию для response
-      const response = await axios.get(
-        `${MQTT_BROCKER_API_URL}/objects/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
-          },
-        },
-      );
-      this.logger.log("Succes fetching data:", JSON.stringify(response.data));
-      return response.data;
-    } catch (error) {
-      this.logger.error("Error fetching data:", JSON.stringify(error));
-      return error as Error;
-    }
+  ) {
+    this.apiToken = this.config.get("RIGHTECH_API_TOKEN") || "";
+    this.defaultHeaders = {
+      Authorization: `Bearer ${this.apiToken}`,
+    };
   }
 
-  async getObjectsList() {
+  private async makeRequest<T>(config: AxiosRequestConfig): Promise<T> {
     try {
-      // @todo добавить типизацию для response
-      const response = await axios.get(`${MQTT_BROCKER_API_URL}/objects`, {
+      const response = await axios({
+        ...config,
         headers: {
-          Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
+          ...this.defaultHeaders,
+          ...config.headers,
         },
       });
-      this.logger.log("Succes fetching data:", response.status);
-      return response.data;
-    } catch (error) {
-      this.logger.error("Error fetching data:", error);
-      return error as Error;
-    }
-  }
 
-  async getModelById(id: string) {
-    try {
-      // @todo добавить типизацию для response
-      const response = await axios.get(`${MQTT_BROCKER_API_URL}/models/${id}`, {
-        headers: {
-          Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
-        },
-      });
-      this.logger.log("Succes fetching data:", JSON.stringify(response.data));
-      return response.data;
-    } catch (error) {
-      this.logger.error("Error fetching data:", JSON.stringify(error));
-      return error as Error;
-    }
-  }
-
-  async getModelsList() {
-    try {
-      // @todo добавить типизацию для response
-      const response = await axios.get(
-        `${MQTT_BROCKER_API_URL}/models?with=data`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
-          },
-        },
+      this.logger.log(
+        `Success fetching data from ${config.url}:`,
+        response.status,
       );
-      this.logger.log("Succes fetching data:", response.status);
       return response.data;
     } catch (error) {
-      this.logger.error("Error fetching data:", error);
-      return error as Error;
+      this.logger.error(
+        `Error fetching data from ${config.url}:`,
+        error instanceof Error ? error.message : JSON.stringify(error),
+      );
+      throw error;
     }
   }
 
-  async getObjectsPackets(id: string) {
-    try {
-      // @todo добавить типизацию для response
-      const response = await axios.get(
-        `${MQTT_BROCKER_API_URL}/objects/${id}/packets?from=2025-05-01T00:00&to=2025-06-01T00:00`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
-          },
-        },
-      );
-      this.logger.log("Succes fetching data:", response.status);
-      return response.data;
-    } catch (error) {
-      this.logger.error("Error fetching data:", JSON.stringify(error));
-      return error as Error;
-    }
+  async getObjectById(id: string): Promise<RightechObjectDto> {
+    return this.makeRequest<RightechObjectDto>({
+      method: RequestMethod.GET,
+      url: `${MQTT_BROCKER_API_URL}/objects/${id}`,
+    });
   }
 
-  async callCommandById(id: string, command: string) {
-    try {
-      // @todo добавить типизацию для response
-      const response = await axios.post(
-        `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${this.config.get("RIGHTECH_API_TOKEN")}`,
-          },
-        },
-      );
-      this.logger.log("Succes fetching data:", response.status);
-      return response.data;
-    } catch (error) {
-      this.logger.error("Error fetching data:", JSON.stringify(error));
-      return error as Error;
-    }
+  async getObjectsList(): Promise<{ data: RightechObjectDto[] }> {
+    return this.makeRequest<{ data: RightechObjectDto[] }>({
+      method: RequestMethod.GET,
+      url: `${MQTT_BROCKER_API_URL}/objects`,
+    });
+  }
+
+  async getModelById(id: string): Promise<{ data: TEMPORARY_ANY }> {
+    return this.makeRequest<{ data: TEMPORARY_ANY }>({
+      method: RequestMethod.GET,
+      url: `${MQTT_BROCKER_API_URL}/models/${id}`,
+    });
+  }
+
+  async getModelsList(): Promise<{ data: RightechModelDto[] }> {
+    return this.makeRequest<{ data: RightechModelDto[] }>({
+      method: RequestMethod.GET,
+      url: `${MQTT_BROCKER_API_URL}/models?with=data`,
+    });
+  }
+
+  async getObjectsPackets(id: string): Promise<{ data: TEMPORARY_ANY[] }> {
+    const fromDate = new Date();
+    fromDate.setMonth(fromDate.getMonth() - 1);
+    const toDate = new Date();
+
+    return this.makeRequest<{ data: TEMPORARY_ANY[] }>({
+      method: RequestMethod.GET,
+      url: `${MQTT_BROCKER_API_URL}/objects/${id}/packets?from=${fromDate.toISOString()}&to=${toDate.toISOString()}`,
+    });
+  }
+
+  async callCommandById(
+    id: string,
+    command: string,
+  ): Promise<{ data: TEMPORARY_ANY }> {
+    return this.makeRequest<{ data: TEMPORARY_ANY }>({
+      method: RequestMethod.POST,
+      url: `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,
+      data: {},
+    });
   }
 }

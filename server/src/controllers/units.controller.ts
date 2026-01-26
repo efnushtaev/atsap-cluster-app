@@ -11,7 +11,7 @@ import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
 import { IRightechProxyService } from "../services/rightechProxy.interface";
 import { UnitsControllersRoutesURL, RequestMethod } from "../const";
-import { UnitDto } from "../dto/units.dto";
+import { AtsapUnit } from "../entities/unit.entity";
 
 @injectable()
 export class UnitsController
@@ -34,10 +34,15 @@ export class UnitsController
   }
 
   async getUnitsList(_: Request, res: Response) {
-    const unitsList = await this.rightechObjectService.getModelsList();
+    const modelsList = await this.rightechObjectService.getModelsList();
+    const atsapUnit = new AtsapUnit();
+
+    const unitsList = modelsList.data.map((model) =>
+      atsapUnit.getUnitFromRightech(model),
+    );
 
     const result = {
-      unitsList: unitsList as unknown as UnitDto[],
+      unitsList,
     };
 
     return this.ok<GetUnitsListResponse>(res, result);

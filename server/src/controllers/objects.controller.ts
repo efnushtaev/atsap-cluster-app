@@ -49,8 +49,6 @@ export class ObjectsController
       (child: TEMPORARY_ANY) => child.id === "params",
     );
 
-    console.log("rightechModelParams: ", rightechModelParams);
-
     const objectsList = rightechModelParams.children.map(
       (rightechModelParam: TEMPORARY_ANY) => {
         return atsapObject.getObjectFromRightech(
@@ -62,19 +60,4 @@ export class ObjectsController
 
     return this.ok<GetObjectsListResponse>(res, { objectsList });
   }
-
-  // async getObjectsDetails(
-  //   req: Request<GetObjectsDetailsParamsReq>,
-  //   res: Response,
-  // ) {
-  //   const { data } = await this.rightechObjectService.getObjectById(
-  //     req.params.objectId,
-  //   );
-
-  //   const atsapObject = new AtsapObject();
-
-  //   atsapObject.getObjectFromRightech(rightechObjectState, rightechModelParam);
-
-  //   return this.ok<GetObjectsDetailsRes>(res, { object: data });
-  // }
 }

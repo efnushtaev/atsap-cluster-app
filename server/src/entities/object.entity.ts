@@ -1,67 +1,60 @@
 import { PERIOD_1H } from "../const";
 import { ObjectsDto } from "../dto/objects.dto";
 import { ObjectsType, SensorObjectsType } from "../dto/types";
-import { TEMPORARY_ANY } from "../types";
+import { RightechObjectDto } from "../dto/rightechObject.dto";
+import { ModelChildren } from "../dto/rightechModel.dto";
+
+// Маппинг для определения типа объекта по первому символу ID
+const OBJECT_TYPE_MAP: Record<string, ObjectsType> = {
+  s: ObjectsType.SENSOR,
+  a: ObjectsType.AUTOMATION,
+};
+
+// Маппинг для определения типа сенсора по второму символу ID
+const SENSOR_TYPE_MAP: Record<string, SensorObjectsType> = {
+  h: SensorObjectsType.HUMIDITY,
+  t: SensorObjectsType.TEMPERATURE,
+};
+
+// Маппинг для определения символа единицы измерения по второму символу ID
+const SENSOR_SYMBOL_MAP: Record<string, string> = {
+  h: "%",
+  t: "℃",
+};
 
 export class AtsapObject {
   constructor() {}
 
-  public getObjectTypeById(id: string) {
-    /**
-     * @TODO: Убрать свитч, реализовать через маппы
-     */
-    switch (id[0]) {
-      case "s":
-        return ObjectsType.SENSOR;
-      case "a":
-        return ObjectsType.AUTOMATION;
-      default:
-        return ObjectsType.SENSOR;
-    }
+  public getObjectTypeById(id: string): ObjectsType {
+    // Используем маппинг вместо switch
+    return OBJECT_TYPE_MAP[id[0]] || ObjectsType.SENSOR;
   }
 
-  public getObjectSensorTypeById(id: string) {
-    /**
-     * @TODO: Убрать свитч, реализовать через маппы
-     */
+  public getObjectSensorTypeById(id: string): SensorObjectsType | undefined {
+    // Проверяем, что это сенсор
     if (id[0] !== "s") {
       return undefined;
     }
 
-    switch (id[1]) {
-      case "h":
-        return SensorObjectsType.HUMIDITY;
-      case "t":
-        return SensorObjectsType.TEMPERATURE;
-      default:
-        return undefined;
-    }
+    // Используем маппинг вместо switch
+    return SENSOR_TYPE_MAP[id[1]];
   }
 
-  public getSensorValueSymbolById(id: string) {
-    /**
-     * @TODO: Убрать свитч, реализовать через маппы
-     */
+  public getSensorValueSymbolById(id: string): string | undefined {
+    // Проверяем, что это сенсор
     if (id[0] !== "s") {
       return undefined;
     }
 
-    switch (id[1]) {
-      case "h":
-        return "%";
-      case "t":
-        return "℃";
-      default:
-        return undefined;
-    }
+    // Используем маппинг вместо switch
+    return SENSOR_SYMBOL_MAP[id[1]];
   }
 
   public getObjectFromRightech(
-    rightechObjectState: TEMPORARY_ANY,
-    rightechModelParam: TEMPORARY_ANY,
+    rightechObjectState: RightechObjectDto["state"],
+    rightechModelParam: ModelChildren,
   ): ObjectsDto {
     const { id, name, description, reference } = rightechModelParam;
-    console.log("rightechObjectState: ", rightechObjectState);
 
     const value = rightechObjectState[id];
 
@@ -70,18 +63,21 @@ export class AtsapObject {
       name,
       description,
       value,
-      topic: reference,
+      topic: reference || "",
       type: this.getObjectTypeById(id),
       sensorType: this.getObjectSensorTypeById(id),
       sensorValueSymbol: this.getSensorValueSymbolById(id),
     };
   }
 
-  public getObjectHistory(history: TEMPORARY_ANY) {
-    const historyMap = new Map<
-      string,
-      { time: number; payload: TEMPORARY_ANY }[]
-    >();
+  public getObjectHistory(
+    history: Array<{
+      topic?: string;
+      time: number;
+      payload: unknown;
+    }>,
+  ): Record<string, unknown[]> {
+    const historyMap = new Map<string, { time: number; payload: unknown }[]>();
     const HISTORY_PERIOD_MILLISECONDS = PERIOD_1H * 1000;
 
     for (let i = 0; i < history.length; i++) {
@@ -103,7 +99,7 @@ export class AtsapObject {
       }
     }
 
-    const result: TEMPORARY_ANY = {};
+    const result: Record<string, unknown[]> = {};
 
     for (const [topic, entries] of historyMap) {
       result[topic] = entries.map((entry) => entry.payload);
