@@ -1,14 +1,39 @@
-import { createCn } from "bem-react-classname";
-import { SearchBar } from "../search-bar"
-import './styles.css'
-import { ActionButton } from "../action-button/action-button";
+import { useNavigate } from 'react-router-dom';
+import { createCn } from 'bem-react-classname';
 
-export const ActionField = () => {
-    const cn = createCn('action-field');
+import { ActionButton } from './action-button/action-button';
+import { SearchBar } from './search-bar';
 
-    return <div className={cn()}>
-        <ActionButton type="" />
-        <SearchBar />
-        {/* <ActionButton type="add" /> */}
+import './styles.css';
+
+const cn = createCn('action-field');
+
+type ActionFieldProps = {
+  hideActionButton?: boolean;
+};
+
+export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/');
+  };
+
+  return (
+    <div className={cn({ hidden: hideActionButton })}>
+      <div className={cn('action-button', { hidden: hideActionButton })}>
+        <ActionButton type="" onClick={handleClick} />
+      </div>
+      <div className={cn('action-button', { hidden: true })}>
+        <ActionButton type="empty" />
+      </div>
+      <SearchBar />
+      <div className={cn('action-button', { hidden: false })}>
+        <ActionButton type="empty" />
+      </div>
+      <div className={cn('action-button', { hidden: hideActionButton })}>
+        <ActionButton type="empty" />
+      </div>
     </div>
-}
+  );
+};

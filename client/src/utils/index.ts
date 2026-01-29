@@ -1,2 +1,1 @@
-export * from './format-date'
-export * from './get-zhmak-label'
+export * from './format-date';

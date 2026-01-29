@@ -1,1 +1,1 @@
-export * from './units-card'
+export { UnitsCard } from './units-card';

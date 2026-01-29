@@ -1,9 +1,12 @@
 .app {
   min-width: 400px;
+  transform: translateY(0);
 }
 
-.app__content {
-  max-width: 1084px;
-  margin: 0 auto;
-  box-sizing: border-box;
+.app__wrapper {
+  transition: transform 0.2s ease-out;
+}
+
+.app__wrapper_tabs-visible {
+  transform: translateY(-72px);
 }

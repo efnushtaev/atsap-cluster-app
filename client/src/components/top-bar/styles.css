@@ -1,9 +1,9 @@
 .top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
+  position: relative;
+  z-index: 100;
+
   width: 100%;
+  height: 44px;
   padding: 0 24px;
   box-sizing: border-box;
 
@@ -11,29 +11,51 @@
   border-bottom: 1px solid var(--topbar-border-color);
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 52px;
+    top: 0;
+    left: 0;
     width: 100%;
-    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.4);
+    height: 44px;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.4);
     opacity: 0;
-    transition: 0.3s;
+    transition: opacity 0.2s ease-out;
   }
 
-  &:hover:before {
+  &:hover::before {
     opacity: 1;
-    transition: 0.3s;
   }
 }
 
+.top-bar__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
 .top-bar__title {
-  font-weight: 900;
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 100%;
+  font-weight: 800;
   color: var(--font-title-color-2);
   letter-spacing: 0.5px;
 }
 
+.top-bar__clock {
+  font-weight: 500;
+  color: var(--font-title-color-2);
+  letter-spacing: 0.5px;
+  margin: 0 20px;
+  white-space: nowrap;
+}
+
 .top-bar__icon {
   color: var(--icon-color);
+}
+
+.top-bar__right-side {
+  display: flex;
 }
