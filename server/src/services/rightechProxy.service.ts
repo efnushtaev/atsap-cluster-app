@@ -49,50 +49,47 @@ export class RightechProxyService implements IRightechProxyService {
     }
   }
 
-  async getObjectById(id: string): Promise<RightechObjectDto> {
+  async getObjectById({ id }: { id: string }): Promise<RightechObjectDto> {
     return this.makeRequest<RightechObjectDto>({
       method: RequestMethod.GET,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}`,
     });
   }
 
-  async getObjectsList(): Promise<{ data: RightechObjectDto[] }> {
-    return this.makeRequest<{ data: RightechObjectDto[] }>({
+  async getObjectsList(): Promise<RightechObjectDto[]> {
+    return this.makeRequest<RightechObjectDto[]>({
       method: RequestMethod.GET,
       url: `${MQTT_BROCKER_API_URL}/objects`,
     });
   }
 
-  async getModelById(id: string): Promise<{ data: TEMPORARY_ANY }> {
-    return this.makeRequest<{ data: TEMPORARY_ANY }>({
+  async getModelById({ id }: { id: string }): Promise<RightechModelDto> {
+    return this.makeRequest<RightechModelDto>({
       method: RequestMethod.GET,
       url: `${MQTT_BROCKER_API_URL}/models/${id}`,
     });
   }
 
-  async getModelsList(): Promise<{ data: RightechModelDto[] }> {
-    return this.makeRequest<{ data: RightechModelDto[] }>({
+  async getModelsList(): Promise<RightechModelDto[]> {
+    return this.makeRequest<RightechModelDto[]>({
       method: RequestMethod.GET,
       url: `${MQTT_BROCKER_API_URL}/models?with=data`,
     });
   }
 
-  async getObjectsPackets(id: string): Promise<{ data: TEMPORARY_ANY[] }> {
+  async getObjectsPackets(id: string): Promise<TEMPORARY_ANY[]> {
     const fromDate = new Date();
     fromDate.setMonth(fromDate.getMonth() - 1);
     const toDate = new Date();
 
-    return this.makeRequest<{ data: TEMPORARY_ANY[] }>({
+    return this.makeRequest<TEMPORARY_ANY[]>({
       method: RequestMethod.GET,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}/packets?from=${fromDate.toISOString()}&to=${toDate.toISOString()}`,
     });
   }
 
-  async callCommandById(
-    id: string,
-    command: string,
-  ): Promise<{ data: TEMPORARY_ANY }> {
-    return this.makeRequest<{ data: TEMPORARY_ANY }>({
+  async callCommandById(id: string, command: string): Promise<TEMPORARY_ANY> {
+    return this.makeRequest<TEMPORARY_ANY>({
       method: RequestMethod.POST,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,
       data: {},

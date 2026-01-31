@@ -11,9 +11,9 @@
 .objects-card__content {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: 100%;
-  padding: 0 16px 0 20px;
+  padding: 16px 20px;
   box-sizing: border-box;
 }
 
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: row;
   gap: 32px;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .objects-card__icon {
@@ -36,7 +36,7 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.15px;
-  color: var(--font-title-color-1);
+  color: var(--object-title-color-1);
 }
 
 .objects-card__title > div {

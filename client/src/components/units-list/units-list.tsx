@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { createCn } from 'bem-react-classname';
 
 import { UnitsCard } from '../units-card';
@@ -6,37 +7,59 @@ import './styles.css';
 
 const cn = createCn('listing');
 
-const MOCK_LISTING = [
-  {
-    title: 'Это очень важный юнит №1 Это очень важный юнит №1',
-    describe:
-      'Теплица с помидорками и огурчиками. А еще тут растет петрушечка.  Теплица с помидорками и огурчиками. А еще тут растет петрушечка. Теплица с помидорками и огурчиками. А еще тут растет петрушечка',
-  },
-  {
-    title: 'Важный юнит №2',
-    describe:
-      'Пеплица с помидорками и огурчиками. А еще тут растет петрушечка.  Теплица с помидорками и огурчиками. А еще тут растет петрушечка. Теплица с помидорками и огурчиками. А еще тут растет петрушечка',
-  },
-  {
-    title: 'Сильно важный юнит №3',
-    describe:
-      'Что то с помидорками и огурчиками. А еще тут растет петрушечка.  Теплица с помидорками и огурчиками. А еще тут растет петрушечка. Теплица с помидорками и огурчиками. А еще тут растет петрушечка',
-  },
-  {
-    title: 'Важный юнит №2',
-    describe:
-      'Пеплица с помидорками и огурчиками. А еще тут растет петрушечка.  Теплица с помидорками и огурчиками. А еще тут растет петрушечка. Теплица с помидорками и огурчиками. А еще тут растет петрушечка',
-  },
-];
+interface Unit {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface GetUnitsListResponse {
+  unitsList: Unit[];
+}
 
 export const UnitsList = () => {
-  const listing = MOCK_LISTING;
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const response = await fetch('/api/v1/units/list');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: GetUnitsListResponse = await response.json();
+        setUnits(data.unitsList);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        console.error('Error fetching units:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUnits();
+  }, []);
+
+  if (loading) {
+    return <div className={'rotate-scale-up'} />;
+  }
+
+  if (error) {
+    return <div className={cn()}>Ошибка загрузки: {error}</div>;
+  }
 
   return (
     <div className={cn()}>
-      {listing.map((card) => {
-        return <UnitsCard {...card} />;
-      })}
+      {units.map((unit) => (
+        <UnitsCard
+          key={unit.id}
+          id={unit.id}
+          title={unit.name}
+          describe={unit.description || ''}
+        />
+      ))}
     </div>
   );
 };

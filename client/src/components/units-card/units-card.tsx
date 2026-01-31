@@ -6,15 +6,16 @@ import './styles.css';
 const cn = createCn('units-card');
 
 type UnitsCardProps = {
+  id: string;
   title: string;
   describe: string;
 };
 
-export const UnitsCard = ({ title, describe }: UnitsCardProps) => {
+export const UnitsCard = ({ id, title, describe }: UnitsCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/monitoring');
+    navigate(`/monitoring?id=${id}`);
   };
 
   return (

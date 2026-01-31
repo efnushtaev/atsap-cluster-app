@@ -1,14 +1,16 @@
-import { RightechModelDto } from "../dto/rightechModel.dto";
+import { RightechObjectDto } from "../dto/rightechObject.dto";
 import { UnitDto } from "../dto/units.dto";
 
 export class AtsapUnit {
   constructor() {}
 
-  public getUnitFromRightech(rightechModel: RightechModelDto): UnitDto {
-    return {
-      id: rightechModel._id,
-      name: rightechModel.name,
-      description: rightechModel.description,
-    };
+  public getListFromRightechObjectsList(
+    rightechObject: RightechObjectDto[],
+  ): UnitDto[] {
+    return rightechObject.map((model) => ({
+      id: model._id,
+      name: model.name,
+      description: model.description,
+    }));
   }
 }

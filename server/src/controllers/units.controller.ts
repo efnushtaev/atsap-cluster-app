@@ -34,17 +34,13 @@ export class UnitsController
   }
 
   async getUnitsList(_: Request, res: Response) {
-    const modelsList = await this.rightechObjectService.getModelsList();
+    const objectsList = await this.rightechObjectService.getObjectsList();
     const atsapUnit = new AtsapUnit();
 
-    const unitsList = modelsList.data.map((model) =>
-      atsapUnit.getUnitFromRightech(model),
-    );
+    const unitsList = atsapUnit.getListFromRightechObjectsList(objectsList);
 
-    const result = {
+    return this.ok<GetUnitsListResponse>(res, {
       unitsList,
-    };
-
-    return this.ok<GetUnitsListResponse>(res, result);
+    });
   }
 }

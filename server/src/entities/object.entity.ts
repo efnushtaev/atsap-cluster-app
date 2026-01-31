@@ -2,7 +2,7 @@ import { PERIOD_1H } from "../const";
 import { ObjectsDto } from "../dto/objects.dto";
 import { ObjectsType, SensorObjectsType } from "../dto/types";
 import { RightechObjectDto } from "../dto/rightechObject.dto";
-import { ModelChildren } from "../dto/rightechModel.dto";
+import { RightechModelDto } from "../dto/rightechModel.dto";
 
 // Маппинг для определения типа объекта по первому символу ID
 const OBJECT_TYPE_MAP: Record<string, ObjectsType> = {
@@ -50,24 +50,42 @@ export class AtsapObject {
     return SENSOR_SYMBOL_MAP[id[1]];
   }
 
-  public getObjectFromRightech(
-    rightechObjectState: RightechObjectDto["state"],
-    rightechModelParam: ModelChildren,
-  ): ObjectsDto {
-    const { id, name, description, reference } = rightechModelParam;
+  public getObjectsListFromRightech(
+    objectsList: RightechObjectDto[],
+    modelData: RightechModelDto,
+  ): ObjectsDto[] {
+    const object = objectsList.find(
+      (rightechObject) => rightechObject.model === modelData._id,
+    );
 
-    const value = rightechObjectState[id];
+    if (!object?.state) {
+      return [];
+    }
 
-    return {
-      id,
-      name,
-      description,
-      value,
-      topic: reference || "",
-      type: this.getObjectTypeById(id),
-      sensorType: this.getObjectSensorTypeById(id),
-      sensorValueSymbol: this.getSensorValueSymbolById(id),
-    };
+    const objectsParams = modelData.data.children.find(
+      (child) => child.id === "params",
+    );
+
+    if (!objectsParams?.children) {
+      return [];
+    }
+
+    return objectsParams.children.map((params) => {
+      const { id, name, description, reference } = params;
+
+      const value = object.state[id] === null ? undefined : object.state[id];
+
+      return {
+        id,
+        name,
+        description,
+        value,
+        topic: reference || "",
+        type: this.getObjectTypeById(id),
+        sensorType: this.getObjectSensorTypeById(id),
+        sensorValueSymbol: this.getSensorValueSymbolById(id),
+      };
+    });
   }
 
   public getObjectHistory(

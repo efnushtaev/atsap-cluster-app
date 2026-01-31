@@ -3,13 +3,13 @@ import { inject, injectable } from "inversify";
 
 import "reflect-metadata";
 import {
-  GetObjectsListParamsReq,
+  GetObjectsListBodyReq,
   GetObjectsListResponse,
   IObjectsController,
 } from "./objects.controller.interface";
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
-import { TEMPORARY_ANY, TYPES } from "../types";
+import { TYPES } from "../types";
 import { IRightechProxyService } from "../services/rightechProxy.interface";
 import { ObjectsControllersRoutesURL, RequestMethod } from "../const";
 import { AtsapObject } from "../entities/object.entity";
@@ -35,27 +35,27 @@ export class ObjectsController
   }
 
   async getObjectsList(
-    { body }: Request<GetObjectsListParamsReq>,
+    { body }: Request<never, never, GetObjectsListBodyReq>,
     res: Response,
   ) {
-    const { data: rightechModelData } =
-      await this.rightechObjectService.getModelById(body.modelId);
-    const { state: rightechObjectState } =
-      await this.rightechObjectService.getObjectById(body.objectId);
+    const rightechObject = await this.rightechObjectService.getObjectById({
+      id: body.id,
+    });
+    /**
+     * Запрос getModelById нужен для получения списка всех объектов юнита
+     */
+    const rightechModel = await this.rightechObjectService.getModelById({
+      id: rightechObject.model,
+    });
+
+    const rightechObjectsList =
+      await this.rightechObjectService.getObjectsList();
 
     const atsapObject = new AtsapObject();
 
-    const rightechModelParams = rightechModelData.children.find(
-      (child: TEMPORARY_ANY) => child.id === "params",
-    );
-
-    const objectsList = rightechModelParams.children.map(
-      (rightechModelParam: TEMPORARY_ANY) => {
-        return atsapObject.getObjectFromRightech(
-          rightechObjectState,
-          rightechModelParam,
-        );
-      },
+    const objectsList = atsapObject.getObjectsListFromRightech(
+      rightechObjectsList,
+      rightechModel,
     );
 
     return this.ok<GetObjectsListResponse>(res, { objectsList });
