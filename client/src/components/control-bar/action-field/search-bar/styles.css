@@ -19,3 +19,9 @@
   text-align: right;
   color: var(--font-color-primary);
 }
+
+@media (max-width: 800px) {
+  .search-bar {
+  display: none;
+  }
+}

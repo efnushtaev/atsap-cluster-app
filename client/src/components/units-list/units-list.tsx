@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { createCn } from 'bem-react-classname';
 
 import { UnitsCard } from '../units-card';
+import { mockApi, isMockMode } from '../mock-api';
 
 import './styles.css';
 
@@ -25,12 +26,19 @@ export const UnitsList = () => {
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const response = await fetch('/api/v1/units/list');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (isMockMode()) {
+          // Use mock data
+          const data = await mockApi.getUnitsList();
+          setUnits(data.unitsList);
+        } else {
+          // Use real API
+          const response = await fetch('/api/v1/units/list');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data: GetUnitsListResponse = await response.json();
+          setUnits(data.unitsList);
         }
-        const data: GetUnitsListResponse = await response.json();
-        setUnits(data.unitsList);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
         console.error('Error fetching units:', err);

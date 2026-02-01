@@ -1,12 +1,24 @@
 .app {
+  height: 100vh;
   min-width: 400px;
-  transform: translateY(0);
 }
 
-.app__wrapper {
-  transition: transform 0.2s ease-out;
+.app__mobile-wrapper {
+  display: none;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
 
-.app__wrapper_tabs-visible {
+.app__mobile-wrapper_tabs-visible {
   transform: translateY(-72px);
+}
+
+@media (max-width: 800px) {
+  .app__desktop-wrapper {
+    display: none;
+  }
+  .app__mobile-wrapper {
+    display: block;
+  }
 }

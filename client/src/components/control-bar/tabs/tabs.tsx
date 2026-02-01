@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
-export const TabBar = ({
+export const Tabs = ({
   isVisible: visibleProp = true,
 }: {
   isVisible?: boolean;
@@ -35,7 +35,7 @@ export const TabBar = ({
   }, [visibleProp]);
 
   return (
-    <div className={cn({ visible: isVisible })}>
+    <div className={cn({ visible: isVisible, 'main-page': location.pathname === '/' })}>
       <Link
         to="/monitoring"
         className={cn('tab', {

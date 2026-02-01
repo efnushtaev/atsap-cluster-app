@@ -25,6 +25,8 @@
   --unit-picture-color: #9c9c9c;
   --unit-picture-background: #7e7e7e;
   --actions-search-background: #252525;
+  --actions-button-background: #171717cc;
+  --topbar-background-color: #171717;
   --tab-background--hover: #222222;
   --loader-color: #8f8f8f;
 
@@ -33,6 +35,7 @@
 
 body {
   margin: 0;
+  height: 100vh;
   background-color: var(--background-primary-color);
   color: white;
   text-align: center;

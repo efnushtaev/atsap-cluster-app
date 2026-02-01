@@ -45,6 +45,7 @@
 }
 
 .top-bar__clock {
+  display: block;
   font-weight: 500;
   color: var(--font-title-color-2);
   letter-spacing: 0.5px;
@@ -58,4 +59,10 @@
 
 .top-bar__right-side {
   display: flex;
+}
+
+@media (max-width: 800px) {
+  .top-bar__clock {
+    display: none;
+  }
 }

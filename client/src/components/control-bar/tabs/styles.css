@@ -51,3 +51,13 @@
   font-weight: 500;
   color: var(--tab-font-color---active);
 }
+
+.tab-bar__visible {
+  transform: translateY(0px);
+}
+
+@media (max-width: 800px) {
+  .tab-bar {
+    transform: translateY(0px);
+  }
+}
