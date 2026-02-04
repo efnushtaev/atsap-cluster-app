@@ -25,16 +25,10 @@ export const ObjectsCard = ({ title, describe, value }: ObjectsCardProps) => {
       <div className={cn('content')}>
         <div className={cn('content-top')}>
           <div>
-            <div className={cn('title')}>
-              <div>{title}</div>
-            </div>
-            <div className={cn('describe')}>
-              <div>{describe}</div>
-            </div>
+            <div className={cn('title')}>{title}</div>
+            <div className={cn('describe')}>{describe}</div>
           </div>
-          <div>
-            <SunOutlined className={cn('icon')} />
-          </div>
+          <SunOutlined className={cn('icon')} />
         </div>
         <div className={cn('value')}>{value}</div>
       </div>

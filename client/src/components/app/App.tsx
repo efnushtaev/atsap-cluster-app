@@ -1,50 +1,67 @@
-import { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  useLocation,
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { createCn } from 'bem-react-classname';
 
+import { useMobileDetection, useShowTabs } from '../../hooks';
+
 import { TopBar } from '../top-bar';
+import { ControlBar, ControlBarMobile } from '../control-bar';
+import { PagesRoutes } from '../pages-routes/pages-routes';
 
 import './styles.css';
-import { ControlBar } from '../control-bar/control-bar';
-import { PagesRoutes } from '../pages-routes/pages-routes';
 
 const cn = createCn('app');
 
-const AppContent = () => {
-  const { pathname } = useLocation();
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 800);
-  const [showTabs, setShowTabs] = useState(pathname !== '/');
-
-  useEffect(() => {
-    setShowTabs(pathname !== '/');
-  }, [pathname]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 800);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+/**
+ * Main application content component for mobile devices
+ * Handles layout and composition of main application components for mobile
+ */
+const AppContentMobile = () => {
+  const showTabs = useShowTabs();
 
   return (
-    <div className={cn()}>
+    <div className={cn()} data-testid="app-container">
       <TopBar />
-
-      {!isMobile ? <ControlBar showTabs={showTabs} /> : null}
-
       <PagesRoutes showTabs={showTabs} />
-
-      {isMobile ? <ControlBar showTabs={showTabs} isMobile={true} /> : null}
+      <ControlBarMobile showTabs={showTabs} />
     </div>
   );
 };
 
+/**
+ * Main application content component for desktop devices
+ * Handles layout and composition of main application components for desktop
+ */
+const AppContentDesktop = () => {
+  const showTabs = useShowTabs();
+
+  return (
+    <div className={cn()} data-testid="app-container">
+      <TopBar />
+      <ControlBar showTabs={showTabs} />
+      <PagesRoutes showTabs={showTabs} />
+    </div>
+  );
+};
+
+/**
+ * Main application content component
+ * Handles layout and composition of main application components
+ * Switches between mobile and desktop layouts based on device detection
+ */
+const AppContent = () => {
+  const isMobile = useMobileDetection();
+
+  if (isMobile) {
+    return <AppContentMobile />;
+  }
+
+  return <AppContentDesktop />;
+};
+
+/**
+ * Main application component
+ * Wraps the application content with the router
+ */
 export const App = () => {
   return (
     <Router>

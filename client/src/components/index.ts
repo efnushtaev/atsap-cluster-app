@@ -6,6 +6,7 @@ export * from './objects-list';
 export * from './pages-routes';
 export * from './control-bar/action-field/search-bar';
 export * from './control-bar/tabs';
+export * from './control-bar';
 export * from './top-bar';
 export * from './units-card';
 export * from './units-list';

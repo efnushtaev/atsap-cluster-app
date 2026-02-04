@@ -1,7 +1,3 @@
-.page {
-  min-width: 400px;
-}
-
 .page__content {
   max-width: 1084px;
   margin: 0 auto;
@@ -10,7 +6,7 @@
 }
 
 .pages-routes {
-  height: calc(100vh - 173px);
+  height: calc(100vh - 194px);
   overflow: scroll;
   transform: translateY(-72px);
   transition: transform 0.2s ease-out;
@@ -22,6 +18,10 @@
 
 @media (max-width: 800px) {
   .pages-routes {
-    transform: translateY(0);
+    height: calc(100vh - 44px);
+    transform: translateY(0px);
+  }
+  .pages-routes_tabs-visible {
+    height: calc(100vh - 117px);
   }
 }

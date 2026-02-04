@@ -35,7 +35,12 @@ export const Tabs = ({
   }, [visibleProp]);
 
   return (
-    <div className={cn({ visible: isVisible, 'main-page': location.pathname === '/' })}>
+    <div
+      className={cn({
+        visible: isVisible,
+        'main-page': location.pathname === '/',
+      })}
+    >
       <Link
         to="/monitoring"
         className={cn('tab', {

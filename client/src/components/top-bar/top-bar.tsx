@@ -17,7 +17,6 @@ export const TopBar = () => {
         <MenuOutlined className={cn('icon')} />
         <div className={cn('right-side')}>
           <div className={cn('clock')}>{formatDate(timestamp)}</div>
-          <UserOutlined className={cn('icon')} />
         </div>
       </div>
       <div className={cn('title')}>Личный кабинет</div>

@@ -5,7 +5,7 @@
   /* Text Colors */
   --font-color-primary: #7e7e7e;
   --font-title-color-1: #919191;
-  --font-title-color-2: #565656;
+  --font-title-color-2: #6a6969;
   --tab-font-color: #a3a3a3;
   --tab-font-color--active: #ffffff;
 
@@ -53,7 +53,7 @@ code {
 
 /* Loader Animation */
 .rotate-scale-up {
-  margin: 32px auto 32px auto;
+  margin: 64px auto 64px auto;
   border: 1px solid var(--loader-color);
   height: 16px;
   width: 16px;

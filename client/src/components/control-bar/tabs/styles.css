@@ -60,4 +60,10 @@
   .tab-bar {
     transform: translateY(0px);
   }
+  .tab-bar__tab {
+    border-top: 1px solid var(--topbar-border-color);
+  }
+  .tab-bar__tab_state_active {
+    border-top: 1px solid var(--tab-border-color--active);
+  }
 }

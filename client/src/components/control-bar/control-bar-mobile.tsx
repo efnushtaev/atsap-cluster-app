@@ -7,7 +7,7 @@ import './styles.css';
 
 const cn = createCn('control-bar');
 
-export const ControlBar = ({
+export const ControlBarMobile = ({
   showTabs = true,
 }: {
   showTabs?: boolean;
@@ -18,12 +18,12 @@ export const ControlBar = ({
 
   return (
     <div
-      className={cn('wrapper', {
+      className={cn('mobile-wrapper', {
         'tabs-visible': showTabs,
       })}
     >
-      <Tabs isVisible={showTabs} />
       <ActionField hideActionButton={isMainPage} />
+      {!isMainPage ? <Tabs isVisible={showTabs} /> : null}
     </div>
   );
 };

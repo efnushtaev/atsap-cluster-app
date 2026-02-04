@@ -24,13 +24,7 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
       <div className={cn('action-button', { hidden: hideActionButton })}>
         <ActionButton type="" onClick={handleClick} />
       </div>
-      <div className={cn('action-button', { hidden: true })}>
-        <ActionButton type="empty" />
-      </div>
       <SearchBar />
-      <div className={cn('action-button', { hidden: false })}>
-        <ActionButton type="empty" />
-      </div>
       <div className={cn('action-button', { hidden: hideActionButton })}>
         <ActionButton type="empty" />
       </div>

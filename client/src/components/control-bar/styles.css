@@ -1,25 +1,19 @@
-.control-bar__desktop-wrapper {
+.control-bar__wrapper {
   transform: translateY(-72px);
   transition: transform 0.2s ease-out;
   border-bottom: 1px solid #424242;
 }
 
-.control-bar__desktop-wrapper_tabs-visible {
+.control-bar__wrapper_tabs-visible {
   transform: translateY(0px);
 }
 
 .control-bar__mobile-wrapper {
-  transform: translateY(0px);
+  transform: translateY(-77px);
 }
 
 @media (max-width: 800px) {
-  .control-bar__desktop-wrapper {
-    transform: translateY(0px);
-  }
   .action-field {
-    transform: translateY(0px);
-  }
-  .control-bar__desktop-wrapper_tabs-visible {
     transform: translateY(0px);
   }
 }

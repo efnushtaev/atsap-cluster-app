@@ -3,22 +3,9 @@
   min-width: 400px;
 }
 
-.app__mobile-wrapper {
-  display: none;
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-}
-
-.app__mobile-wrapper_tabs-visible {
-  transform: translateY(-72px);
-}
-
+/* Mobile-specific styles are handled in the ControlBar component */
 @media (max-width: 800px) {
-  .app__desktop-wrapper {
-    display: none;
-  }
-  .app__mobile-wrapper {
-    display: block;
+  .app {
+    min-width: 320px;
   }
 }
