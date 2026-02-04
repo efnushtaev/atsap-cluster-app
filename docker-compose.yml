@@ -69,6 +69,11 @@ services:
     image: mysql:8.0
     container_name: portainer_mysql
     restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     networks:
       - fullstack-network
     healthcheck:
