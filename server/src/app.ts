@@ -28,7 +28,7 @@ export class App {
     @inject(TYPES.MySQL) private mySQL: MySQL,
   ) {
     this.app = express();
-    this.port = 3001;
+    this.port = parseInt(process.env.PORT || "3001", 10);
   }
 
   private useMiddleware(): void {
@@ -36,6 +36,11 @@ export class App {
   }
 
   private useRoutes(): void {
+    // Health check endpoint
+    this.app.get("/health", (req, res) => {
+      res.status(200).send("OK");
+    });
+
     this.app.use(
       `${API_V1_URL_PREFIX}${ControllersDomens.OBJECTS}`,
       this.objectsController.router,
@@ -49,7 +54,6 @@ export class App {
   private useExeptionFilters(): void {
     this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
   }
-
   public async init(): Promise<void> {
     this.useMiddleware();
     this.useRoutes();

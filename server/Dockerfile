@@ -1,23 +1,34 @@
-# Используем официальный образ Node.js
-FROM node:18-alpine
+FROM node:18 AS builder
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    git
 
-# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
+COPY package.json ./
+COPY package-lock.json ./
 
-# Копируем package.json и package-lock.json для установки зависимостей
-COPY package*.json ./
+RUN npm ci --include=dev
 
-# Устанавливаем зависимости
-RUN yarn install
+COPY . ./
+RUN npm run build
 
-# Копируем весь исходный код в контейнер
-COPY . .
+# Используем node напрямую вместо npm start
+# Финальный этап
+FROM node:18-alpine AS production
+WORKDIR /app
+# Копируем только production зависимости
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Компилируем TypeScript в JavaScript
-RUN yarn run build
+# Копируем только собранное приложение из этапа builder
+COPY --from=builder /app ./
+# Копируем другие необходимые файлы (если нужны)
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/.env ./
 
-# Указываем порт, который будет использовать приложение
-EXPOSE 3000
-
-# Команда для запуска приложения
+EXPOSE 3001
+# Указываем команду запуска
 CMD ["node", "dist/index.js"]
