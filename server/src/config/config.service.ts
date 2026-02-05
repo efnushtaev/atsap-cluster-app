@@ -12,6 +12,7 @@ export class ConfigService implements IConfigService {
   constructor(@inject(TYPES.Logger) private logger: ILogger) {
     // Always start with process.env as the base configuration
     this.config = { ...process.env };
+  console.log('this.config: ',this.config);
 
     // In non-production environments, try to load .env file
     if (process.env.NODE_ENV !== "prod") {
@@ -32,6 +33,7 @@ export class ConfigService implements IConfigService {
       );
     }
   }
+
 
   get(key: string): string | undefined {
     return this.config[key];

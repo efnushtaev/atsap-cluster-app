@@ -1,33 +1,28 @@
-FROM node:18 AS builder
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    git
+FROM node:18-alpine AS builder
+# Установка минимального набора зависимостей для сборки
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm ci --include=dev
+# Установка всех зависимостей, включая devDependencies для сборки
+RUN npm ci && npm cache clean --force
 
 COPY . ./
 RUN npm run build
 
-# Используем node напрямую вместо npm start
-# Финальный этап
+# Финальный этап с минимальным образом
 FROM node:18-alpine AS production
 WORKDIR /app
-# Копируем только production зависимости
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci --only=production && npm cache clean --force
 
-# Копируем только собранное приложение из этапа builder
-COPY --from=builder /app ./
-# Копируем другие необходимые файлы (если нужны)
-# COPY --from=builder /app/public ./public
-# COPY --from=builder /app/.env ./
+# Копируем только production зависимости и собранное приложение
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
+COPY --from=builder /app/dist ./dist
+
+# Установка только production зависимостей
+RUN npm ci --only=production && npm cache clean --force
 
 EXPOSE 3001
 # Указываем команду запуска

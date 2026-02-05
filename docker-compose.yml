@@ -10,12 +10,12 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=prod
-      - RIGHTECH_API_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2OTVjZGVkNTdhMWMyZjc3MzNmMmZhOWYiLCJzdWIiOiI2NTRiZTYwODZmZGUwMmVhYzg3YzBjMDkiLCJncnAiOiI2NTRiZTYwODZmZGUwMmVhYzg3YzBjMDgiLCJvcmciOiI2NTRiZTYwODZmZGUwMmVhYzg3YzBjMDgiLCJsaWMiOiI2ODc1NDJhMjJkZWRkMWIxZWViOWFlMWIiLCJ1c2ciOiJhcGkiLCJmdWxsIjpmYWxzZSwicmlnaHRzIjoxLjUsImlhdCI6MTc2NzY5NDAzNywiZXhwIjoxNzcwMjM4ODAwfQ.6ifr5qSl7fGzx3LgIy_3k2CH4fBfo7ahNzbpZWz3nTM
-      - MYSQL_PORT=3306
-      - MYSQL_HOST=mysql
-      - MYSQL_DATABASE=users_db
-      - MYSQL_USER=app_user
-      - MYSQL_PASSWORD=secure_password
+      - RIGHTECH_API_TOKEN=${RIGHTECH_API_TOKEN}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       - mysql
     expose:
@@ -24,10 +24,19 @@ services:
       - fullstack-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 30s
+      interval: 60s
       timeout: 10s
       retries: 3
       start_period: 60s
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
 
   # Frontend service (только сборка статики)
   frontend:
@@ -40,6 +49,15 @@ services:
     networks:
       - fullstack-network
     # Не публикуем порты, контейнер используется только для сборки
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
 
   # Nginx reverse proxy
   nginx:
@@ -61,9 +79,18 @@ services:
       # - frontend-static:/usr/share/nginx/html:ro
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
+      interval: 60s
       timeout: 10s
       retries: 3
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
   mysql:
     image: mysql:8.0
@@ -74,14 +101,34 @@ services:
       - MYSQL_DATABASE=users_db
       - MYSQL_USER=app_user
       - MYSQL_PASSWORD=secure_password
+      - MYSQL_ROOT_HOST=%
+      # Оптимизация MySQL для низких ресурсов
+      - MYSQLD_OPTS=--innodb-buffer-pool-size=64M --innodb-log-file-size=16M --innodb-log-buffer-size=4M --max-connections=50 --thread-cache-size=5 --tmp-table-size=16M --max-heap-table-size=16M
     networks:
       - fullstack-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
-      interval: 30s
+      interval: 60s
       timeout: 10s
-      retries: 5
+      retries: 3
       start_period: 30s
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+    command:
+      - '--innodb-buffer-pool-size=64M'
+      - '--innodb-log-file-size=16M'
+      - '--innodb-log-buffer-size=4M'
+      - '--max-connections=50'
+      - '--thread-cache-size=5'
+      - '--tmp-table-size=16M'
+      - '--max-heap-table-size=16M'
 
 # Volumes для хранения статики фронтенда
 # volumes:
