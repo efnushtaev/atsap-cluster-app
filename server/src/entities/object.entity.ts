@@ -1,5 +1,5 @@
 import { PERIOD_1H } from "../const";
-import { ObjectsDto } from "../dto/objects.dto";
+import { AutomationObjectsDto, SensorObjectsDto } from "../dto/objects.dto";
 import { ObjectsType, SensorObjectsType } from "../dto/types";
 import { RightechObjectDto } from "../dto/rightechObject.dto";
 import { RightechModelDto } from "../dto/rightechModel.dto";
@@ -25,12 +25,12 @@ const SENSOR_SYMBOL_MAP: Record<string, string> = {
 export class AtsapObject {
   constructor() {}
 
-  public getObjectTypeById(id: string): ObjectsType {
+  private getObjectTypeById(id: string): ObjectsType {
     // Используем маппинг вместо switch
     return OBJECT_TYPE_MAP[id[0]] || ObjectsType.SENSOR;
   }
 
-  public getObjectSensorTypeById(id: string): SensorObjectsType | undefined {
+  private getSensorObjectTypeById(id: string): SensorObjectsType | undefined {
     // Проверяем, что это сенсор
     if (id[0] !== "s") {
       return undefined;
@@ -40,7 +40,7 @@ export class AtsapObject {
     return SENSOR_TYPE_MAP[id[1]];
   }
 
-  public getSensorValueSymbolById(id: string): string | undefined {
+  private getSensorValueSymbolById(id: string): string | undefined {
     // Проверяем, что это сенсор
     if (id[0] !== "s") {
       return undefined;
@@ -50,10 +50,10 @@ export class AtsapObject {
     return SENSOR_SYMBOL_MAP[id[1]];
   }
 
-  public getObjectsListFromRightech(
+  public getSensorsListFromRightech(
     objectsList: RightechObjectDto[],
     modelData: RightechModelDto,
-  ): ObjectsDto[] {
+  ): SensorObjectsDto[] {
     const object = objectsList.find(
       (rightechObject) => rightechObject.model === modelData._id,
     );
@@ -71,7 +71,7 @@ export class AtsapObject {
     }
 
     return objectsParams.children.map((params) => {
-      const { id, name, description, reference } = params;
+      const { id, name, description = '', reference } = params;
 
       const value = object.state[id] === null ? undefined : object.state[id];
 
@@ -81,9 +81,46 @@ export class AtsapObject {
         description,
         value,
         topic: reference || "",
-        type: this.getObjectTypeById(id),
-        sensorType: this.getObjectSensorTypeById(id),
+        type: ObjectsType.SENSOR,
+        sensorType: this.getSensorObjectTypeById(id),
         sensorValueSymbol: this.getSensorValueSymbolById(id),
+      };
+    });
+  }
+
+  public getAutomationsListFromRightech(
+    objectsList: RightechObjectDto[],
+    modelData: RightechModelDto,
+  ): AutomationObjectsDto[] {
+    const object = objectsList.find(
+      (rightechObject) => rightechObject.model === modelData._id,
+    );
+
+    if (!object?.state) {
+      return [];
+    }
+
+    const objectsParams = modelData.data.children.find(
+      (child) => child.id === "cmds",
+    );
+
+    if (!objectsParams?.children) {
+      return [];
+    }
+
+    return objectsParams.children.map((params) => {
+      const { id, name, description = '', reference } = params;
+
+      const value = object.state[id] === null ? undefined : object.state[id];
+
+      return {
+        id,
+        name,
+        description,
+        value,
+        topic: reference || "",
+        type: ObjectsType.AUTOMATION,
+        active: value === true,
       };
     });
   }

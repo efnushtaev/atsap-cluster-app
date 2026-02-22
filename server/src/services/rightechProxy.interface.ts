@@ -1,6 +1,6 @@
-import { ObjectsDto } from "../dto/objects.dto";
 import { RightechModelDto } from "../dto/rightechModel.dto";
 import { RightechObjectDto } from "../dto/rightechObject.dto";
+import { ObjectsDto } from "../dto/types";
 import { TEMPORARY_ANY } from "../types";
 
 export interface IRightechProxyService {

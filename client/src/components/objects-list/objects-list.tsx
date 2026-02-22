@@ -2,13 +2,21 @@ import { createCn } from 'bem-react-classname';
 
 import { ObjectsCard } from '../objects-card';
 import { useObjectsListFetching } from '../../hooks/use-objects-list-fetching';
+import { ObjectItem, ObjectsListProps } from './types';
 
 import './styles.css';
 
 const cn = createCn('listing');
 
-export const ObjectsList = () => {
-  const { objects, loading, error } = useObjectsListFetching();
+const transformObjectToCard = (obj: ObjectItem) => ({
+  title: obj.name,
+  describe: obj.description || '',
+  value:
+    obj.value !== undefined ? `${obj.value}${obj.sensorValueSymbol || ''}` : '',
+});
+
+export const ObjectsList = ({ type = 'sensors' }: ObjectsListProps) => {
+  const { objects, loading, error } = useObjectsListFetching(type);
 
   if (loading) {
     return <div className={'rotate-scale-up'} />;
@@ -18,20 +26,10 @@ export const ObjectsList = () => {
     return <div className={cn()}>Ошибка загрузки: {error}</div>;
   }
 
-  // Transform API response to match ObjectsCard props
-  const transformedObjects = objects.map((obj) => ({
-    title: obj.name,
-    describe: obj.description || '',
-    value:
-      obj.value !== undefined
-        ? `${obj.value}${obj.sensorValueSymbol || ''}`
-        : '',
-  }));
-
   return (
     <div className={cn()}>
-      {transformedObjects.map((card, index) => (
-        <ObjectsCard key={index} {...card} />
+      {objects.map((obj, index) => (
+        <ObjectsCard key={index} {...transformObjectToCard(obj)} />
       ))}
     </div>
   );

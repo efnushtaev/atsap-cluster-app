@@ -20,12 +20,13 @@
 .objects-card__content-top {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   gap: 32px;
   justify-content: space-between;
 }
 
 .objects-card__icon {
-  font-size: 36px;
+  font-size: 32px;
   color: #f9ff8d;
 }
 

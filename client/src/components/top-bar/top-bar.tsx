@@ -1,5 +1,5 @@
 import { createCn } from 'bem-react-classname';
-import { MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 
 import { useTimestamp } from '../../hooks/use-timestamp';
 import { formatDate } from '../../utils/format-date';

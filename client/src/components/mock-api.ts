@@ -10,7 +10,16 @@ export const mockApi = {
     return { unitsList: mockUnits };
   },
 
-  getObjectsList: async (id: string): Promise<{ objectsList: typeof mockObjects }> => {
+  getSensorsList: async (id: string): Promise<{ objectsList: typeof mockObjects }> => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // In a real scenario, we might filter objects based on the unit ID
+    // For now, we'll return all mock objects
+    return { objectsList: mockObjects };
+  },
+
+  getAutomationsList: async (id: string): Promise<{ objectsList: typeof mockObjects }> => {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500));
     

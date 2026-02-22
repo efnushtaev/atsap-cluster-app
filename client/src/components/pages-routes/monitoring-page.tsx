@@ -4,7 +4,7 @@ import { BasePage } from './base-page';
 export const MonitoringPage = () => {
   return (
     <BasePage>
-      <ObjectsList />
+      <ObjectsList type="sensors" />
     </BasePage>
   );
 };

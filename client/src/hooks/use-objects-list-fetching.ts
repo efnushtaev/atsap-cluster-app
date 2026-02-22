@@ -11,7 +11,11 @@ interface ObjectItem {
   sensorValueSymbol?: string;
 }
 
-interface GetObjectsListResponse {
+interface GetSensorsListResponse {
+  objectsList: ObjectItem[];
+}
+
+interface GetAutomationsListResponse {
   objectsList: ObjectItem[];
 }
 
@@ -23,9 +27,10 @@ interface UseObjectsListResult {
 
 /**
  * Custom hook to fetch objects list data based on unit ID from query parameters
+ * @param type - Type of objects to fetch ('sensors' or 'automations')
  * @returns Object containing objects list, loading state, and error state
  */
-export const useObjectsListFetching = (): UseObjectsListResult => {
+export const useObjectsListFetching = (type: 'sensors' | 'automations' = 'sensors'): UseObjectsListResult => {
   const [objects, setObjects] = useState<ObjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,11 +49,16 @@ export const useObjectsListFetching = (): UseObjectsListResult => {
 
         if (isMockMode()) {
           // Use mock data
-          const data = await mockApi.getObjectsList(id);
+          let data;
+          if (type === 'sensors') {
+            data = await mockApi.getSensorsList(id);
+          } else {
+            data = await mockApi.getAutomationsList(id);
+          }
           setObjects(data.objectsList);
         } else {
           // Use real API
-          const response = await fetch('/api/v1/objects/list', {
+          const response = await fetch(`/api/v1/objects/list/${type}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -60,7 +70,12 @@ export const useObjectsListFetching = (): UseObjectsListResult => {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          const data: GetObjectsListResponse = await response.json();
+          let data;
+          if (type === 'sensors') {
+            data = await response.json() as GetSensorsListResponse;
+          } else {
+            data = await response.json() as GetAutomationsListResponse;
+          }
           setObjects(data.objectsList);
         }
       } catch (err) {
@@ -74,7 +89,7 @@ export const useObjectsListFetching = (): UseObjectsListResult => {
     };
 
     fetchObjects();
-  }, [location.search]);
+  }, [location.search, type]);
 
   return { objects, loading, error };
 };

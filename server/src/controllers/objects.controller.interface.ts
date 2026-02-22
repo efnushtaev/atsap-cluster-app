@@ -1,18 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ControllerResponseMessage } from "../common/controller.types";
-import { ObjectsDto } from "../dto/objects.dto";
+import { AutomationObjectsDto, SensorObjectsDto } from "../dto/objects.dto";
 
-export interface GetObjectsListBodyReq {
+export type GetSensorsListBodyReq = {
+  id: string;
+}
+export type GetAutomationsListBodyReq = {
   id: string;
 }
 
-export type GetObjectsListResponse = { objectsList: ObjectsDto[] };
+export type GetSensorsListResponse = { objectsList: SensorObjectsDto[] };
+export type GetAutomationsListResponse = { objectsList: AutomationObjectsDto[] };
 
 export interface IObjectsController {
-  getObjectsList: (
-    req: Request<never, never, GetObjectsListBodyReq>,
+  getSensorsList: (
+    req: Request<never, never, GetSensorsListBodyReq>,
     res: Response,
-    next: NextFunction,
-  ) => ControllerResponseMessage<GetObjectsListResponse>;
+  ) => ControllerResponseMessage<GetSensorsListResponse>;
+
+  getAutomationsList: (
+    req: Request<never, never, GetAutomationsListBodyReq>,
+    res: Response,
+  ) => ControllerResponseMessage<GetAutomationsListResponse>;
 }
