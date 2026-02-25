@@ -17,6 +17,16 @@ export const Tabs = ({
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(visibleProp);
 
+  const searchParams = new URLSearchParams(location.search);
+  const currentId = searchParams.get('id');
+
+  const createUrl = (path: string) => {
+    if (currentId) {
+      return `${path}?id=${currentId}`;
+    }
+    return path;
+  };
+
   const isActive = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
@@ -24,9 +34,7 @@ export const Tabs = ({
     return location.pathname.startsWith(path);
   };
 
-  // Trigger animation when visibility changes
   useEffect(() => {
-    // Use requestAnimationFrame to ensure proper timing
     const frame = requestAnimationFrame(() => {
       setIsVisible(visibleProp);
     });
@@ -42,7 +50,7 @@ export const Tabs = ({
       })}
     >
       <Link
-        to="/monitoring"
+        to={createUrl('/monitoring')}
         className={cn('tab', {
           state: isActive('/monitoring') ? 'active' : false,
         })}
@@ -63,7 +71,7 @@ export const Tabs = ({
         </div>
       </Link>
       <Link
-        to="/automation"
+        to={createUrl('/automation')}
         className={cn('tab', {
           state: isActive('/automation') ? 'active' : false,
         })}
@@ -85,7 +93,7 @@ export const Tabs = ({
         </div>
       </Link>
       <Link
-        to="/info"
+        to={createUrl('/info')}
         className={cn('tab', { state: isActive('/info') ? 'active' : false })}
       >
         <div

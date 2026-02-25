@@ -2,18 +2,13 @@ import { createCn } from 'bem-react-classname';
 
 import { ObjectsCard } from '../objects-card';
 import { useObjectsListFetching } from '../../hooks/use-objects-list-fetching';
-import { ObjectItem, ObjectsListProps } from './types';
+import { ObjectsListProps } from './types';
 
 import './styles.css';
+import { NAVIGATION_PATHS } from '../constants';
+import { transformObjectToCard } from '../../utils/transform-object-to-card';
 
 const cn = createCn('listing');
-
-const transformObjectToCard = (obj: ObjectItem) => ({
-  title: obj.name,
-  describe: obj.description || '',
-  value:
-    obj.value !== undefined ? `${obj.value}${obj.sensorValueSymbol || ''}` : '',
-});
 
 export const ObjectsList = ({ type = 'sensors' }: ObjectsListProps) => {
   const { objects, loading, error } = useObjectsListFetching(type);
@@ -29,7 +24,11 @@ export const ObjectsList = ({ type = 'sensors' }: ObjectsListProps) => {
   return (
     <div className={cn()}>
       {objects.map((obj, index) => (
-        <ObjectsCard key={index} {...transformObjectToCard(obj)} />
+        <ObjectsCard
+          key={index}
+          {...transformObjectToCard(obj)}
+          navigateTo={NAVIGATION_PATHS[type]}
+        />
       ))}
     </div>
   );

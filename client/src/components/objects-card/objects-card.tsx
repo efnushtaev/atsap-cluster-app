@@ -9,15 +9,16 @@ type ObjectsCardProps = {
   title: string;
   describe: string;
   value: string;
+  navigateTo?: string;
 };
 
 const cn = createCn('objects-card');
 
-export const ObjectsCard = ({ title, describe, value }: ObjectsCardProps) => {
+export const ObjectsCard = ({ title, describe, value, navigateTo = '/monitoring' }: ObjectsCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/monitoring');
+    navigate(navigateTo);
   };
 
   return (

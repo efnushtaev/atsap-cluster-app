@@ -3,3 +3,8 @@ export const API_URLS = {
   getCount: '/api/getCount',
   count: '/api/count/1',
 };
+
+export const NAVIGATION_PATHS = {
+  automations: '/automation',
+  sensors: '/monitoring',
+};
