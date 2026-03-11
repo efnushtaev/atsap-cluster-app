@@ -23,4 +23,9 @@ export interface IObjectsController {
     req: Request<never, never, GetAutomationsListBodyReq>,
     res: Response,
   ) => ControllerResponseMessage<GetAutomationsListResponse>;
+
+  callCommand: (
+    req: Request<never, never, { id: string; commandId: string; value: string }>,
+    res: Response,
+  ) => ControllerResponseMessage<{ success: boolean }>;
 }

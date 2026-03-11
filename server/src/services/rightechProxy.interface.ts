@@ -9,5 +9,5 @@ export interface IRightechProxyService {
   getModelsList: () => Promise<RightechModelDto[]>;
   getObjectsList: () => Promise<RightechObjectDto[]>;
   getObjectsPackets: (id: string) => Promise<TEMPORARY_ANY[]>;
-  callCommandById: (id: string, command: string) => Promise<ObjectsDto[]>;
+  callCommandById: ({id, command}: {id: string, command: string}) => Promise<ObjectsDto[]>;
 }

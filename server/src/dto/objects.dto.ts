@@ -46,6 +46,10 @@ export class AutomationObjectsDto implements ObjectsDto {
   @IsString()
   id: string;
   /**
+   * Айди комманды
+   */
+  commandId: string;
+  /**
    * Тип объекта
    */
   type: ObjectsType.AUTOMATION;
@@ -54,11 +58,11 @@ export class AutomationObjectsDto implements ObjectsDto {
    */
   topic: string;
   /**
-   * Имя объекта
+   * Имя комманды
    */
   name: string;
   /**
-   * Описание объекта
+   * Описание комманды
    */
   description: string;
   /**

@@ -51,11 +51,16 @@ export class AtsapObject {
   }
 
   public getSensorsListFromRightech(
-    objectsList: RightechObjectDto[],
+{    objectsList,
+    modelData,
+  objectId}: {
+      objectsList: RightechObjectDto[],
     modelData: RightechModelDto,
+    objectId: string,
+    }
   ): SensorObjectsDto[] {
     const object = objectsList.find(
-      (rightechObject) => rightechObject.model === modelData._id,
+      (rightechObject) => rightechObject._id === objectId,
     );
 
     if (!object?.state) {
@@ -114,7 +119,8 @@ export class AtsapObject {
       const value = object.state[id] === null ? undefined : object.state[id];
 
       return {
-        id,
+        id: object._id,
+        commandId: id,
         name,
         description,
         value,

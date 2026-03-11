@@ -88,7 +88,7 @@ export class RightechProxyService implements IRightechProxyService {
     });
   }
 
-  async callCommandById(id: string, command: string): Promise<TEMPORARY_ANY> {
+  async callCommandById({id, command}: {id: string, command: string}): Promise<TEMPORARY_ANY> {
     return this.makeRequest<TEMPORARY_ANY>({
       method: RequestMethod.POST,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,

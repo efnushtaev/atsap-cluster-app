@@ -15,7 +15,6 @@ import { TYPES } from "../types";
 import { IRightechProxyService } from "../services/rightechProxy.interface";
 import { ObjectsControllersRoutesURL, RequestMethod } from "../const";
 import { AtsapObject } from "../entities/object.entity";
-import { ControllerResponseMessage } from "../common/controller.types";
 
 @injectable()
 export class ObjectsController
@@ -39,6 +38,11 @@ export class ObjectsController
         method: RequestMethod.POST,
         func: this.getAutomationsList,
       },
+      {
+        path: ObjectsControllersRoutesURL.OBJECTS_LIST + "/call-command",
+        method: RequestMethod.POST,
+        func: this.callCommand,
+      },
     ]);
   }
 
@@ -61,10 +65,11 @@ export class ObjectsController
 
     const atsapObject = new AtsapObject();
 
-    const objectsList = atsapObject.getSensorsListFromRightech(
-      rightechObjectsList,
-      rightechModel,
-    );
+    const objectsList = atsapObject.getSensorsListFromRightech({
+      objectsList: rightechObjectsList,
+      modelData: rightechModel,
+      objectId: body.id
+    });
 
     return this.ok<GetSensorsListResponse>(res, { objectsList });
   }
@@ -96,4 +101,16 @@ export class ObjectsController
     return this.ok<GetAutomationsListResponse>(res, { objectsList });
   }
 
- }
+  async callCommand(
+    { body }: Request<never, never, { id: string; commandId: string }>,
+    res: Response,
+  ) {
+    try {
+      await this.rightechObjectService.callCommandById({id: body.id, command: body.commandId});
+      return this.ok(res, { success: true });
+    } catch (error) {
+      return this.send(res, 500, { success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
+
+}
