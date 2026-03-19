@@ -16,6 +16,7 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - CLIMATE_CONTROL_UNIT_ID=${CLIMATE_CONTROL_UNIT_ID}
     depends_on:
       - mysql
     expose:

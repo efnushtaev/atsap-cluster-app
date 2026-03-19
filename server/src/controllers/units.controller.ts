@@ -9,7 +9,7 @@ import {
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
-import { IRightechProxyService } from "../services/rightechProxy.interface";
+import { IRightechProxyService } from "../services/rightech-proxy";
 import { UnitsControllersRoutesURL, RequestMethod } from "../const";
 import { AtsapUnit } from "../entities/unit.entity";
 

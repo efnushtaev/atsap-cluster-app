@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import axios, { AxiosRequestConfig } from "axios";
 
-import { TYPES } from "../types";
-import { ILogger } from "../logger/logger.interface";
-import { IRightechProxyService } from "./rightechProxy.interface";
-import { IConfigService } from "../config/config.service.interface";
-import { MQTT_BROCKER_API_URL, RequestMethod } from "../const";
-import { RightechObjectDto } from "../dto/rightechObject.dto";
-import { RightechModelDto } from "../dto/rightechModel.dto";
-import { TEMPORARY_ANY } from "../types";
+import { TYPES } from "../../types";
+import { ILogger } from "../../logger/logger.interface";
+import { IRightechProxyService } from "./";
+import { IConfigService } from "../../config/config.service.interface";
+import { MQTT_BROCKER_API_URL, RequestMethod } from "../../const";
+import { RightechObjectDto } from "../../dto/rightechObject.dto";
+import { RightechModelDto } from "../../dto/rightechModel.dto";
+import { TEMPORARY_ANY } from "../../types";
 
 @injectable()
 export class RightechProxyService implements IRightechProxyService {
@@ -88,7 +88,13 @@ export class RightechProxyService implements IRightechProxyService {
     });
   }
 
-  async callCommandById({id, command}: {id: string, command: string}): Promise<TEMPORARY_ANY> {
+  async callCommandById({
+    id,
+    command,
+  }: {
+    id: string;
+    command: string;
+  }): Promise<TEMPORARY_ANY> {
     return this.makeRequest<TEMPORARY_ANY>({
       method: RequestMethod.POST,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,

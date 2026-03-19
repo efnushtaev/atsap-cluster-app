@@ -12,7 +12,7 @@ import {
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
-import { IRightechProxyService } from "../services/rightechProxy.interface";
+import { IRightechProxyService } from "../services/rightech-proxy";
 import { ObjectsControllersRoutesURL, RequestMethod } from "../const";
 import { AtsapObject } from "../entities/object.entity";
 
@@ -68,7 +68,7 @@ export class ObjectsController
     const objectsList = atsapObject.getSensorsListFromRightech({
       objectsList: rightechObjectsList,
       modelData: rightechModel,
-      objectId: body.id
+      objectId: body.id,
     });
 
     return this.ok<GetSensorsListResponse>(res, { objectsList });
@@ -106,11 +106,16 @@ export class ObjectsController
     res: Response,
   ) {
     try {
-      await this.rightechObjectService.callCommandById({id: body.id, command: body.commandId});
+      await this.rightechObjectService.callCommandById({
+        id: body.id,
+        command: body.commandId,
+      });
       return this.ok(res, { success: true });
     } catch (error) {
-      return this.send(res, 500, { success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+      return this.send(res, 500, {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
-
 }

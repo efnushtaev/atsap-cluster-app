@@ -1,21 +1,30 @@
 import { Container, ContainerModule, interfaces } from "inversify";
 
-import { IExeptionFilter } from "./errors/exeption.filter.interface";
+import { type IExeptionFilter } from "./errors/exeption.filter.interface";
 import { TYPES } from "./types";
 import { App } from "./app";
-import { IConfigService } from "./config/config.service.interface";
-import { ILogger } from "./logger/logger.interface";
+import { type IConfigService } from "./config/config.service.interface";
+import { type ILogger } from "./logger/logger.interface";
 import { LoggerService } from "./logger/loggerService";
 import { ObjectsController } from "./controllers/objects.controller";
 import { ExeptionFilter } from "./errors/exeption.filter";
 import { ConfigService } from "./config/config.service";
-import { RightechProxyService } from "./services/rightechProxy.service";
-import { IRightechProxyService } from "./services/rightechProxy.interface";
-import { MySQL } from "./services/mySql.interface";
-import { MySQLService } from "./services/mySql.service";
-import { IUnitsController } from "./controllers/units.controller.interface";
+import {
+  type IRightechProxyService,
+  RightechProxyService,
+  RightechProxyMqttService,
+} from "./services/rightech-proxy";
+import { type MySQL, MySQLService } from "./services/mysql";
+import { type IMqttService, MqttService } from "./services/mqtt";
+import {
+  type IClimateControlService,
+  ClimateControlService,
+} from "./services/climate-control";
+import { RelayControllerOptions } from "./services/climate-control/types";
+import { type IUnitsService, UnitsService } from "./services/units";
+import { type IUnitsController } from "./controllers/units.controller.interface";
 import { UnitsController } from "./controllers/units.controller";
-import { IObjectsController } from "./controllers/objects.controller.interface";
+import { type IObjectsController } from "./controllers/objects.controller.interface";
 
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IRightechProxyService>(TYPES.RightechProxyService)
@@ -28,6 +37,17 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
     .to(UnitsController)
     .inSingletonScope();
   bind<MySQL>(TYPES.MySQL).to(MySQLService).inSingletonScope();
+  bind<IMqttService>(TYPES.MqttService).to(MqttService).inSingletonScope();
+  bind<RightechProxyMqttService>(TYPES.RightechProxyMqttService)
+    .to(RightechProxyMqttService)
+    .inSingletonScope();
+  bind<RelayControllerOptions>(TYPES.RelayControllerOptions).toConstantValue(
+    {},
+  );
+  bind<IUnitsService>(TYPES.UnitsService).to(UnitsService).inSingletonScope();
+  bind<IClimateControlService>(TYPES.ClimateControlService)
+    .to(ClimateControlService)
+    .inSingletonScope();
   bind<ILogger>(TYPES.Logger).to(LoggerService).inSingletonScope();
   bind<IExeptionFilter>(TYPES.ExeptionFilter)
     .to(ExeptionFilter)

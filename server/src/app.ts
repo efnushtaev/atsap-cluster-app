@@ -3,14 +3,15 @@ import express, { Express } from "express";
 import { inject, injectable } from "inversify";
 import bodyParser from "body-parser";
 
-import { ILogger } from "./logger/logger.interface";
+import { type ILogger } from "./logger/logger.interface";
 import { TYPES } from "./types";
+import { type IConfigService } from "./config/config.service.interface";
 import "reflect-metadata";
-import { IExeptionFilter } from "./errors/exeption.filter.interface";
+import { type IExeptionFilter } from "./errors/exeption.filter.interface";
 import { ObjectsController } from "./controllers/objects.controller";
-import { MySQL } from "./services/mySql.interface";
 import { API_V1_URL_PREFIX, ControllersDomens } from "./const";
 import { UnitsController } from "./controllers/units.controller";
+import { type IClimateControlService } from "./services/climate-control/climateControl.interface";
 
 @injectable()
 export class App {
@@ -25,7 +26,9 @@ export class App {
     @inject(TYPES.UnitsController)
     private unitsController: UnitsController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
-    @inject(TYPES.MySQL) private mySQL: MySQL,
+    @inject(TYPES.ConfigService) private configService: IConfigService,
+    @inject(TYPES.ClimateControlService)
+    private climateControlService: IClimateControlService,
   ) {
     this.app = express();
     this.port = parseInt(process.env.PORT || "3001", 10);
@@ -54,6 +57,22 @@ export class App {
   private useExeptionFilters(): void {
     this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
   }
+
+  protected async afterStart(): Promise<void> {
+    this.logger.log("[App] afterStart hook executed");
+    // Can be overridden by subclasses to perform post-startup actions
+
+    const unitId = this.configService.get("CLIMATE_CONTROL_UNIT_ID");
+    if (unitId) {
+      this.logger.log(`[App] Starting climate control for unit ${unitId}`);
+      await this.climateControlService.executeControll(unitId);
+    } else {
+      this.logger.log(
+        "[App] CLIMATE_CONTROL_UNIT_ID not set, skipping climate control",
+      );
+    }
+  }
+
   public async init(): Promise<void> {
     this.useMiddleware();
     this.useRoutes();
@@ -62,9 +81,6 @@ export class App {
     this.server = this.app.listen(this.port);
     this.logger.log(`Сервер запущен на http://localhost:${this.port}`);
 
-    // this.mySQL.initializeDatabase().then(() => {
-    //   this.server = this.app.listen(this.port);
-    //   this.logger.log(`Сервер запущен на http://localhost:${this.port}`);
-    // });
+    await this.afterStart();
   }
 }

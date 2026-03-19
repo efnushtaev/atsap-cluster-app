@@ -1,9 +1,9 @@
 import mysql from "mysql2/promise";
 import { inject, injectable } from "inversify";
 
-import { MySQL } from "./mySql.interface";
-import { TYPES } from "../types";
-import { IConfigService } from "../config/config.service.interface";
+import { MySQL } from "./";
+import { TYPES } from "../../types";
+import { IConfigService } from "../../config/config.service.interface";
 
 @injectable()
 export class MySQLService implements MySQL {
