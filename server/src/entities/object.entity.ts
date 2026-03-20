@@ -1,8 +1,8 @@
 import { PERIOD_1H } from "../const";
-import { AutomationObjectsDto, SensorObjectsDto } from "../dto/objects.dto";
-import { ObjectsType, SensorObjectsType } from "../dto/types";
 import { RightechObjectDto } from "../dto/rightechObject.dto";
 import { RightechModelDto } from "../dto/rightechModel.dto";
+import { ObjectsType, SensorObjectsType } from "../dto/objects.dto";
+import { TEMPORARY_ANY } from "../types";
 
 // Маппинг для определения типа объекта по первому символу ID
 const OBJECT_TYPE_MAP: Record<string, ObjectsType> = {
@@ -50,15 +50,15 @@ export class AtsapObject {
     return SENSOR_SYMBOL_MAP[id[1]];
   }
 
-  public getSensorsListFromRightech(
-{    objectsList,
+  public getSensorsListFromRightech({
+    objectsList,
     modelData,
-  objectId}: {
-      objectsList: RightechObjectDto[],
-    modelData: RightechModelDto,
-    objectId: string,
-    }
-  ): SensorObjectsDto[] {
+    objectId,
+  }: {
+    objectsList: RightechObjectDto[];
+    modelData: RightechModelDto;
+    objectId: string;
+  }): TEMPORARY_ANY[] {
     const object = objectsList.find(
       (rightechObject) => rightechObject._id === objectId,
     );
@@ -76,7 +76,7 @@ export class AtsapObject {
     }
 
     return objectsParams.children.map((params) => {
-      const { id, name, description = '', reference } = params;
+      const { id, name, description = "", reference } = params;
 
       const value = object.state[id] === null ? undefined : object.state[id];
 
@@ -96,7 +96,7 @@ export class AtsapObject {
   public getAutomationsListFromRightech(
     objectsList: RightechObjectDto[],
     modelData: RightechModelDto,
-  ): AutomationObjectsDto[] {
+  ): TEMPORARY_ANY[] {
     const object = objectsList.find(
       (rightechObject) => rightechObject.model === modelData._id,
     );
@@ -114,7 +114,7 @@ export class AtsapObject {
     }
 
     return objectsParams.children.map((params) => {
-      const { id, name, description = '', reference } = params;
+      const { id, name, description = "", reference } = params;
 
       const value = object.state[id] === null ? undefined : object.state[id];
 

@@ -67,7 +67,36 @@ export class RightechProxyMqttService implements IMqttService {
     this.logger.log(
       `[RightechProxyMqttService] publish to ${topic}: ${message.toString()}`,
     );
-    // Assuming the MQTT proxy exposes a REST endpoint for publishing
+
+    // Check if topic matches command pattern: units/{unitId}/commands/{command}
+    const commandMatch = topic.match(/^units\/(.+)\/commands\/(.+)$/);
+    if (commandMatch) {
+      const [, unitId, command] = commandMatch;
+      let data = {};
+      try {
+        const messageStr = message.toString();
+        if (messageStr.trim() !== "") {
+          data = JSON.parse(messageStr);
+        }
+      } catch (error) {
+        this.logger.warn(
+          `[RightechProxyMqttService] failed to parse message as JSON, using empty data:`,
+          error instanceof Error ? error.message : JSON.stringify(error),
+        );
+      }
+      this.logger.log(
+        `[RightechProxyMqttService] forwarding command to Rightech API: unit ${unitId}, command ${command}`,
+        data,
+      );
+      await this.rightechProxyService.callCommandById({
+        id: unitId,
+        command,
+        data,
+      });
+      return;
+    }
+
+    // Otherwise, fallback to MQTT proxy
     await this.makeRequest({
       method: RequestMethod.POST,
       url: `${this.mqttProxyUrl}/mqtt/publish`,
@@ -110,7 +139,6 @@ export class RightechProxyMqttService implements IMqttService {
 
     // Emulate subscription by polling every 5 minutes (300000 ms)
     const interval = setInterval(async () => {
-      this.logger.log(`[RightechProxyMqttService] interval fired for ${topic}`);
       try {
         this.logger.log(
           `[RightechProxyMqttService] fetching packets for ${topic}`,

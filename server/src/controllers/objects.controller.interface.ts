@@ -1,17 +1,19 @@
-import { NextFunction, Request, Response } from "express";
+import {  Request, Response } from "express";
 
 import { ControllerResponseMessage } from "../common/controller.types";
-import { AutomationObjectsDto, SensorObjectsDto } from "../dto/objects.dto";
+import { TEMPORARY_ANY } from "../types";
 
 export type GetSensorsListBodyReq = {
   id: string;
-}
+};
 export type GetAutomationsListBodyReq = {
   id: string;
-}
+};
 
-export type GetSensorsListResponse = { objectsList: SensorObjectsDto[] };
-export type GetAutomationsListResponse = { objectsList: AutomationObjectsDto[] };
+export type GetSensorsListResponse = { objectsList: TEMPORARY_ANY[] };
+export type GetAutomationsListResponse = {
+  objectsList: TEMPORARY_ANY[];
+};
 
 export interface IObjectsController {
   getSensorsList: (
@@ -25,7 +27,11 @@ export interface IObjectsController {
   ) => ControllerResponseMessage<GetAutomationsListResponse>;
 
   callCommand: (
-    req: Request<never, never, { id: string; commandId: string; value: string }>,
+    req: Request<
+      never,
+      never,
+      { id: string; commandId: string; value: string }
+    >,
     res: Response,
   ) => ControllerResponseMessage<{ success: boolean }>;
 }

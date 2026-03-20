@@ -1,30 +1,29 @@
 import { IsString } from "class-validator";
 
-import { ObjectsType, SensorObjectsType } from "./types";
-import { ObjectsDto } from "./types";
+export enum ObjectsType {
+  SENSOR = "sensor",
+  AUTOMATION = "automation",
+}
 
-export class SensorObjectsDto implements ObjectsDto {
+export enum SensorObjectsType {
+  HUMIDITY = "humidity",
+  TEMPERATURE = "temperature",
+}
+
+export class ObjectsDto {
   /**
    * Айди объекта
    */
   @IsString()
   id: string;
-  /**
-   * Тип объекта
-   */
-  type: ObjectsType.SENSOR;
-  /**
-   * Топик объекта
-   */
+  type: ObjectsType;
   topic: string;
-  /**
-   * Имя объекта
-   */
   name: string;
-  /**
-   * Описание объекта
-   */
   description: string;
+  /**
+   * Состояние автоматики
+   */
+  active?: boolean;
   /**
    * Тип датчика
    */
@@ -37,36 +36,4 @@ export class SensorObjectsDto implements ObjectsDto {
    * Символ - обозначение единицы измерения датчика, если type=sensor
    */
   sensorValueSymbol?: string;
-}
-
-export class AutomationObjectsDto implements ObjectsDto {
-  /**
-   * Айди объекта
-   */
-  @IsString()
-  id: string;
-  /**
-   * Айди комманды
-   */
-  commandId: string;
-  /**
-   * Тип объекта
-   */
-  type: ObjectsType.AUTOMATION;
-  /**
-   * Топик объекта
-   */
-  topic: string;
-  /**
-   * Имя комманды
-   */
-  name: string;
-  /**
-   * Описание комманды
-   */
-  description: string;
-  /**
-   * Состояние автоматики
-   */
-  active?: boolean;
 }

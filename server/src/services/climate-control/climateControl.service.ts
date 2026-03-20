@@ -4,7 +4,6 @@ import { ILogger } from "../../logger/logger.interface";
 import { IConfigService } from "../../config/config.service.interface";
 import { IMqttService } from "../mqtt/mqtt.interface";
 import { TYPES } from "../../types";
-import { SensorObjectsType } from "../../dto/types";
 import {
   type Commands,
   type RelayControllerOptions,
@@ -12,6 +11,7 @@ import {
 } from "./types";
 import { IUnitsService } from "../units";
 import { IClimateControlService } from "./";
+import { SensorObjectsType } from "../../dto/objects.dto";
 
 @injectable()
 export class ClimateControlService implements IClimateControlService {
@@ -35,11 +35,11 @@ export class ClimateControlService implements IClimateControlService {
   ) {
     this.T_SET = options.T_SET ?? this.getConfigNumber("CLIMATE_T_SET", 25);
     this.T_HYST = options.T_HYST ?? this.getConfigNumber("CLIMATE_T_HYST", 1);
-    this.RH_SET = options.RH_SET ?? this.getConfigNumber("CLIMATE_RH_SET", 70);
+    this.RH_SET = options.RH_SET ?? this.getConfigNumber("CLIMATE_RH_SET", 75);
     this.RH_HYST =
-      options.RH_HYST ?? this.getConfigNumber("CLIMATE_RH_HYST", 5);
-    this.T_MAX = options.T_MAX ?? this.getConfigNumber("CLIMATE_T_MAX", 30);
-    this.T_MIN = options.T_MIN ?? this.getConfigNumber("CLIMATE_T_MIN", 20);
+      options.RH_HYST ?? this.getConfigNumber("CLIMATE_RH_HYST", 10);
+    this.T_MAX = options.T_MAX ?? this.getConfigNumber("CLIMATE_T_MAX", 29);
+    this.T_MIN = options.T_MIN ?? this.getConfigNumber("CLIMATE_T_MIN", 24);
 
     this.fanState = false; // текущее состояние вытяжки
     this.humState = false; // текущее состояние увлажнителя
@@ -210,7 +210,6 @@ export class ClimateControlService implements IClimateControlService {
       30000,
     );
     const interval = setInterval(async () => {
-      this.logger.log(`[ClimateControlService] interval fired for unit ${unitId}`);
       try {
         const sensorData = await this.getSensorsData(unitId);
         const commands = this.update(sensorData);
@@ -218,16 +217,18 @@ export class ClimateControlService implements IClimateControlService {
           `[ClimateControlService] computed commands for unit ${unitId}:`,
           commands,
         );
-        // Отправка команд через unitService
+        // Отправка команд через MQTT
         if (commands.fan !== undefined) {
-          await this.unitService.callCommand(unitId, "fan", {
-            value: commands.fan,
-          });
+          await this.mqttService.publish(
+            `units/${unitId}/commands/fan`,
+            JSON.stringify({ value: commands.fan }),
+          );
         }
         if (commands.humidifier !== undefined) {
-          await this.unitService.callCommand(unitId, "humidifier", {
-            value: commands.humidifier,
-          });
+          await this.mqttService.publish(
+            `units/${unitId}/commands/humidifier`,
+            JSON.stringify({ value: commands.humidifier }),
+          );
         }
       } catch (error) {
         this.logger.error(
