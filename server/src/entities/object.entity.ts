@@ -14,6 +14,7 @@ const OBJECT_TYPE_MAP: Record<string, ObjectsType> = {
 const SENSOR_TYPE_MAP: Record<string, SensorObjectsType> = {
   h: SensorObjectsType.HUMIDITY,
   t: SensorObjectsType.TEMPERATURE,
+  f: SensorObjectsType.FLOAT_SENSOR,
 };
 
 // Маппинг для определения символа единицы измерения по второму символу ID

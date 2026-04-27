@@ -26,4 +26,4 @@ RUN npm ci --only=production && npm cache clean --force
 
 EXPOSE 3001
 # Указываем команду запуска
-CMD ["node", "dist/src/index.js"]
+CMD ["node", "dist/index.js"]

@@ -1,11 +1,14 @@
 export interface SensorData {
   temperature: number;
   humidity: number;
+  floatSensor: number;
 }
 
 export interface Commands {
   fan?: boolean;
   humidifier?: boolean;
+  light?: boolean;
+  water?: boolean;
 }
 
 export interface RelayControllerOptions {

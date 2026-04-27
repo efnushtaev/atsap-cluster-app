@@ -7,7 +7,7 @@ type LevelsValue = {
   };
 };
 
-export type ModelChildren = {
+type ModelChildren = {
   id: string;
   name: string;
   active: boolean;

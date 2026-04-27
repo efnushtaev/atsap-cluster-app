@@ -3,10 +3,11 @@ import { type SensorData, type Commands } from "./types";
 export interface IClimateControlService {
   /**
    * Обновить состояние на основе новых данных с датчиков
+   * @param unitId - идентификатор юнита
    * @param sensorData - { temperature, humidity }
-   * @returns команды для исполнительных устройств (fan, humidifier)
+   * @returns команды для исполнительных устройств (fan, humidifier, light)
    */
-  update(sensorData: SensorData): Commands;
+  update(unitId: string, sensorData: SensorData): Commands;
 
   /**
    * Получить данные с датчиков климата используя unitService

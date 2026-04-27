@@ -8,6 +8,7 @@ export enum ObjectsType {
 export enum SensorObjectsType {
   HUMIDITY = "humidity",
   TEMPERATURE = "temperature",
+  FLOAT_SENSOR = "Float",
 }
 
 export class ObjectsDto {

@@ -137,8 +137,14 @@ export class RightechProxyMqttService implements IMqttService {
       // Still create interval but it will fail; we could throw, but for compatibility we'll keep interval and handle error later.
     }
 
-    // Emulate subscription by polling every 5 minutes (300000 ms)
-    const interval = setInterval(async () => {
+    // Clear any existing interval for this topic to avoid duplicates
+    const existingInterval = this.intervals.get(topic);
+    if (existingInterval) {
+      clearInterval(existingInterval);
+    }
+
+    // Define the polling function
+    const poll = async () => {
       try {
         this.logger.log(
           `[RightechProxyMqttService] fetching packets for ${topic}`,
@@ -190,8 +196,18 @@ export class RightechProxyMqttService implements IMqttService {
         );
         callback(topic, errorMessage);
       }
-    }, 30000); // 30 seconds
+    };
 
+    // Execute immediately to get first data quickly
+    poll().catch((err) =>
+      this.logger.error(
+        `[RightechProxyMqttService] initial poll failed for ${topic}:`,
+        err,
+      ),
+    );
+
+    // Then set up interval for subsequent polls (every 30 seconds)
+    const interval = setInterval(poll, 30000);
     this.intervals.set(topic, interval);
   }
 

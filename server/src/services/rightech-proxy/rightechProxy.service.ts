@@ -100,7 +100,9 @@ export class RightechProxyService implements IRightechProxyService {
     return this.makeRequest<TEMPORARY_ANY>({
       method: RequestMethod.POST,
       url: `${MQTT_BROCKER_API_URL}/objects/${id}/commands/${command}`,
-      data,
+      data: {
+        state: data,
+      },
     });
   }
 }
