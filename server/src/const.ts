@@ -3,6 +3,7 @@ export const API_V1_URL_PREFIX = "/api/v1";
 export enum ControllersDomens {
   OBJECTS = "/objects",
   UNITS = "/units",
+  MQTT = "/mqtt",
 }
 
 export enum UnitsControllersRoutesURL {

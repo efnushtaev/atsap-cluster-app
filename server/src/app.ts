@@ -11,6 +11,7 @@ import { type IExeptionFilter } from "./errors/exeption.filter.interface";
 import { ObjectsController } from "./controllers/objects.controller";
 import { API_V1_URL_PREFIX, ControllersDomens } from "./const";
 import { UnitsController } from "./controllers/units.controller";
+import { MqttController } from "./controllers/mqtt.controller";
 import { type IClimateControlService } from "./services/climate-control/climateControl.interface";
 
 @injectable()
@@ -25,6 +26,8 @@ export class App {
     private objectsController: ObjectsController,
     @inject(TYPES.UnitsController)
     private unitsController: UnitsController,
+    @inject(TYPES.MqttController)
+    private mqttController: MqttController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.ClimateControlService)
@@ -52,6 +55,10 @@ export class App {
       `${API_V1_URL_PREFIX}${ControllersDomens.UNITS}`,
       this.unitsController.router,
     );
+    this.app.use(
+      `${API_V1_URL_PREFIX}${ControllersDomens.MQTT}`,
+      this.mqttController.router,
+    );
   }
 
   private useExeptionFilters(): void {
@@ -65,7 +72,7 @@ export class App {
     const unitId = this.configService.get("CLIMATE_CONTROL_UNIT_ID");
     if (unitId) {
       this.logger.log(`[App] Starting climate control for unit ${unitId}`);
-      await this.climateControlService.executeControll(unitId);
+      // await this.climateControlService.executeControll(unitId);
     } else {
       this.logger.log(
         "[App] CLIMATE_CONTROL_UNIT_ID not set, skipping climate control",

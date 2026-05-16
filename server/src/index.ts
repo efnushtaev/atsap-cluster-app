@@ -16,6 +16,7 @@ import {
 } from "./services/rightech-proxy";
 import { type MySQL, MySQLService } from "./services/mysql";
 import { type IMqttService, MqttService } from "./services/mqtt";
+import { LocalMqttService } from "./services/mqtt/localMqtt.service";
 import {
   type IClimateControlService,
   ClimateControlService,
@@ -25,6 +26,7 @@ import { type IUnitsService, UnitsService } from "./services/units";
 import { type IUnitsController } from "./controllers/units.controller.interface";
 import { UnitsController } from "./controllers/units.controller";
 import { type IObjectsController } from "./controllers/objects.controller.interface";
+import { MqttController } from "./controllers/mqtt.controller";
 
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IRightechProxyService>(TYPES.RightechProxyService)
@@ -36,10 +38,16 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUnitsController>(TYPES.UnitsController)
     .to(UnitsController)
     .inSingletonScope();
+  bind<MqttController>(TYPES.MqttController)
+    .to(MqttController)
+    .inSingletonScope();
   bind<MySQL>(TYPES.MySQL).to(MySQLService).inSingletonScope();
   bind<IMqttService>(TYPES.MqttService).to(MqttService).inSingletonScope();
   bind<RightechProxyMqttService>(TYPES.RightechProxyMqttService)
     .to(RightechProxyMqttService)
+    .inSingletonScope();
+  bind<LocalMqttService>(TYPES.LocalMqttService)
+    .to(LocalMqttService)
     .inSingletonScope();
   bind<RelayControllerOptions>(TYPES.RelayControllerOptions).toConstantValue(
     {},
