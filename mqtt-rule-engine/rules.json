@@ -1,0 +1,49 @@
+{
+  "rules": [
+    {
+      "id": "high_temp_alert",
+      "trigger": {
+        "topic": "sensors/temperature",
+        "qos": 0
+      },
+      "when": {
+        "jsonpath": "$.value > 30"
+      },
+      "then": [
+        {
+          "action": "log",
+          "params": {
+            "level": "warn",
+            "message": "Высокая температура: {{value}}°C"
+          }
+        },
+        {
+          "action": "publish",
+          "params": {
+            "topic": "alerts/high_temperature",
+            "payload": "{\"message\": \"Температура превысила порог\", \"value\": {{value}}, \"timestamp\": \"{{timestamp}}\"}",
+            "qos": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "device_online",
+      "trigger": {
+        "topic": "devices/+/online"
+      },
+      "when": {
+        "payloadEquals": "true"
+      },
+      "then": [
+        {
+          "action": "log",
+          "params": {
+            "level": "info",
+            "message": "Устройство {{$.device}} онлайн"
+          }
+        }
+      ]
+    }
+  ]
+}
