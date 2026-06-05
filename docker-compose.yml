@@ -132,32 +132,32 @@ services:
       - '--tmp-table-size=16M'
       - '--max-heap-table-size=16M'
 
-  mosquitto:
-    build:
-      context: ./mqtt
-      dockerfile: Dockerfile
-    container_name: atsap_mosquitto
-    restart: unless-stopped
-    ports:
-      - "1883:1883"
-      - "9001:9001"
-    networks:
-      - fullstack-network
-    healthcheck:
-      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-t", "healthcheck/ping", "-m", "test"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-    # Оптимизация ресурсов
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 128M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
+  # mosquitto:
+  #   build:
+  #     context: ./mqtt
+  #     dockerfile: Dockerfile
+  #   container_name: atsap_mosquitto
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1883:1883"
+  #     - "9001:9001"
+  #   networks:
+  #     - fullstack-network
+  #   healthcheck:
+  #     test: ["CMD", "mosquitto_pub", "-h", "localhost", "-t", "healthcheck/ping", "-m", "test"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 20s
+  #   # Оптимизация ресурсов
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.2'
+  #         memory: 128M
+  #       reservations:
+  #         cpus: '0.1'
+  #         memory: 64M
 
 # Volumes для хранения статики фронтенда
 # volumes:
